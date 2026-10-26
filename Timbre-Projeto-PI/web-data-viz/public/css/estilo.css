@@ -1,20 +1,214 @@
-body {
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100%;
+    min-height: 100vh;
+    display:flex;
+    flex-direction: column;
 }
 
 .header {
     background-color: black;
+    width: 100%;
 }
 
-.header .titulo {
+.header .container{
+    width: 90%;
+    max-width: auto;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    
+}
+
+.logo img{
+    width: 65px;
+    height: auto;
+}
+
+
+
+.titulo {
     font-family: Garamond;
     color: #FFC857;
-    font-size: 10%;
+    font-size: 50px;
 }
 
 .navbar{
-    background-color: black;
-    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 25px;
+    font-family: Garamond;
+    font-size: 16px;
+    padding: 0;
 }
+
+.navbar li a{
+    color: aliceblue;
+    text-decoration: none;
+}
+
+.banner{
+    background-image: url("../assets/imgs/Piano-cauda-sob-luz-dourada.png");
+    width: 100%;
+    height: auto;
+    min-height: 31.25rem;
+    background-size: cover;
+    background-position: center;
+}
+
+.banner h2{ 
+    display: flex;
+    align-items: center;
+
+    font-family: Garamond;
+    font-size: 40px;
+    margin-left: 15%;
+    margin-bottom: 2%;
+    margin-top: 5%;
+
+}
+
+.banner p{
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    margin-left: 15%;
+    margin-bottom: 2%;
+}
+
+button {
+    background-color: #FFC857;
+    font-family: Garamond;
+    font-weight: bold;
+    height: 40px;
+    width: 180px;
+    border-radius: 16px;
+    margin-left: 15%;
+    border-color: #FFC857;
+}
+
+.footer{
+    width: 100%;   
+    background-color: #101010;
+    text-align: center;
+    color: aliceblue;
+}
+
+.footer .container{
+    flex: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.footer1{
+    width: 25%;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 10px;
+    border-right: 2px solid aliceblue;
+}
+
+.footer2{
+    width: 25%;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 10px;
+    border-right: 2px solid aliceblue;
+}
+
+.footer3{
+    width: 25%;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 10px;
+    border-right: 2px solid aliceblue;
+}
+
+.footer4{
+    width: 25%;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 10px;
+    border-right: 2px solid aliceblue;
+}
+
+.footer1 p, .footer2 p, .footer3 p, .footer4 p{
+    margin: 0;
+} 
+
+body1{
+    
+    background-size: cover;
+    background-image: url("../assets/imgs/Piano de cauda.png");
+}
+
+.containerCadastro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #101010;
+    width: 29.68vw;
+    height: 38.54vw;
+    min-height: auto;
+    border-radius: 16px;
+    margin-left: 35%;
+}
+
+.containerCadastro h2{
+    color: aliceblue;
+    display: flex;
+    align-items: center;
+}
+
+.containerCadastro p{
+    color: aliceblue;
+    display: flex;
+    align-items: center;
+    padding-left: 20%;
+}
+
+.containerCadastro span{
+    color: aliceblue;
+    display: flex;
+    align-items: center;
+}
+
+.containerCadastro input{
+    background-color: #171717;
+    border-radius: 16px;
+    width: 360px;
+    min-height: 46px;
+    
+}
+
+.containerCadastro button{
+    
+    
+}
+
 
