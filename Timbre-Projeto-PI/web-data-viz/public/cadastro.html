@@ -11,7 +11,7 @@
     <link rel="icon" href="./assets/icon/favicon2.ico">
     <link rel="preconnect" href="https://fonts.gstatic.com">
 </head>
-<body1>
+<body>
     <div class="header">
         <div class="container">
             <div class="logo">
@@ -38,42 +38,36 @@
         </div>
     </div>
 
-    <div class="login">
-        <div class="alerta_erro">
-            <div class="card_erro" id="cardErro">
-                <span id="mensagem_erro"></span>
-            </div>
-        </div>
-    </div>
+<div class="bannerCadastro">
     
-<div class="containerCadastro">
-    <h2>Criar sua conta<br><br></h2>
-    <p>Faça parte da nossa comunidade e viva a experiência completa do Timbre<br><br></p>
+    <div class="containerCadastro">
+        <h2>Criar sua conta<br><br></h2>
+        <p>Faça parte da nossa comunidade e viva a experiência completa do Timbre<br><br></p>
 
-    <div class="campo">
-        <span>Nome Completo</span>
-        <input type="text" id="nome_input" placeholder="meunomecompleto">
-    </div>
-    <div class="campo">
-        <span>Senha</span>
-        <input type="text" id="senha_input" placeholder="**********">
-    </div>
-    <div class="campo">
-        <span>Confirmação da Senha</span>
-        <input type="text" id="confirmacao_senha_input" placeholder="**********">
-    </div>
-    <div class="campo">
-        <span>Email</span>
-        <input type="text" id="email_input" placeholder="seuemail@gmail.com">
-    </div>
-    <div class="campo">
-        <span>CPF</span>
-        <input type="text" id="cpf_input" placeholder="xxx.xxx.xxx-xx">
-    </div>
+        <div class="campo">
+            <span>Nome Completo</span>
+            <input type="text" id="nome_input" placeholder="meunomecompleto">
+        </div>
+        <div class="campo">
+            <span>Senha</span>
+            <input type="text" id="senha_input" placeholder="**********">
+        </div>
+        <div class="campo">
+            <span>Confirmação da Senha</span>
+            <input type="text" id="confirmacao_senha_input" placeholder="**********">
+        </div>
+        <div class="campo">
+            <span>Email</span>
+            <input type="text" id="email_input" placeholder="seuemail@gmail.com">
+        </div>
+        <div class="campo">
+            <span>CPF</span>
+            <input type="text" id="cpf_input" placeholder="xxx.xxx.xxx-xx">
+        </div>
 
-    <br><br>
-    <button onclick="cadastrar()">Cadastrar</button>
-    <div id="div_mensagem">
+        <br><br>
+        <button onclick="cadastrar()">Cadastrar</button>
+        <div id="div_mensagem">
 
     </div>     
 </div>
@@ -81,13 +75,14 @@
 
     <div id="div_erros_login"></div>
 
-    <div class="footer">
+    <!-- <div class="footer">
         <div class="container">
-
+        -->
         </div>
     </div>
-    
-</body1>
+</div>
+
+</body>
 
 <script>
 
@@ -100,6 +95,8 @@
         var emailVar = email_input.value;
         var cpfVar = cpf_input.value;
         var confirmacaoSenhaVar = confirmacao_senha_input.value;
+        var arroba = email.includes('@');
+        var pontoCom = email.includes('.com');
     }
 
     if(
@@ -110,7 +107,11 @@
        confirmacaoSenhaVar == ""
     ){
         div_mensagem.innerHTML = `Preencha os campos em branco!`;
-    }else{
+    }else if(arroba == false || pontoCom == false){
+        div_mensagem.innerHTML = `Por favor, insira um e-mail válido com (@) e (.com)`;
+    }
+    
+    else{
         setInterval(sumirMensagem, 5000)
     }
 
