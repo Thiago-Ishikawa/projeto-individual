@@ -242,6 +242,47 @@ button {
     margin: auto;
 }
 
+.bannerLogin{
+    flex: 1;
+    background-image: url("../assets/imgs/Piano de cauda.png");
+    background-size: cover;
+    width: 100%;
+    min-height: 31.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
+.containerlogin{
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    background-color: #101010;
+    width: 90%;
+    max-width: 380px;
+    height: auto;
+    padding: 12px;
+    border-radius: 16px;  
+    gap: 2px;
+}
 
+.containerLogin h2{
+    color: #FFC857;
+    font-family: Garamond;
+    font-size: 32px;
+    display: block;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    margin-bottom: 12px;
+    margin: auto;
+}
 
+.containerLogin p{
+    color: aliceblue;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    display: flex;
+    margin-bottom: 10px;
+    margin-left: 10%;
+}

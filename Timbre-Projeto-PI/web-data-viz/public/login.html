@@ -62,6 +62,19 @@
 </body>
 
 <script>
+
+    function entrar(){
+        aguardar();
+
+        var emailVar = ipt_email.value;
+        var senhaVar = ipt_senha.value;
+
+        if(emailVar == "" || senhaVar == ""){
+            div_msg.innerHTML = `Preencha os campos em branco!`;
+        }else{
+            setInterval(subirMensagem, 5000)
+        }
+    }
 </script>
 
 </html>
