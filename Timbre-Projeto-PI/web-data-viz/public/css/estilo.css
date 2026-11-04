@@ -330,3 +330,10 @@ button {
 
 /*Simulador*/
 
+.containerSimulador h2{
+    color: #FFC857;
+}
+
+.containerSimulador h3{
+    text-decoration: aliceblue;
+}
