@@ -329,11 +329,63 @@ button {
 
 
 /*Simulador*/
+.containerSimulador{
+    flex: 1;
+    background-color: #141414;
+    padding: 2rem;
+}
+
+.textoSimulador{
+    width: 60%;
+}
 
 .containerSimulador h2{
     color: #FFC857;
+    font-family: Garamond;
+    font-size: 32px;
+    display: flex;
+    margin: 0 auto 12px;
 }
 
 .containerSimulador h3{
-    text-decoration: aliceblue;
+    color: aliceblue;
+    
+}
+
+.containerSimulador p{
+    color: aliceblue;
+    font-style: 'Inter', sans-serif;
+}
+
+.containerSimulador{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 100%;
+    gap: 30px;
+}
+.imagemSimulador{
+    width: 90%;
+}
+
+.imagemSimulador img{
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.containerSimulador button{
+    background-color: #FFC857;
+    font-family: Garamond;
+    font-weight: bold;
+    max-width: 180px;
+    min-height: 38px;
+    width: 100%;
+    border-radius: 16px;
+    border: none;
+    height: 38px;
+    margin: auto;
 }
