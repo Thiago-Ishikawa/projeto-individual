@@ -349,15 +349,17 @@ button {
 
 .containerSimulador h3{
     color: aliceblue;
+    line-height: 1.2;
     
 }
 
 .containerSimulador p{
     color: aliceblue;
     font-style: 'Inter', sans-serif;
+    line-height: 1.2;
 }
 
-.containerSimulador{
+.containerSimulador .conteudoSimulador{
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -366,7 +368,7 @@ button {
     gap: 30px;
 }
 .imagemSimulador{
-    width: 90%;
+    width: 40%;
 }
 
 .imagemSimulador img{
@@ -388,4 +390,49 @@ button {
     border: none;
     height: 38px;
     margin: auto;
+}
+
+.containerSimulador .conteudoSimulador2{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 100%;
+    gap: 30px;
+}
+
+.textoSimulador2{
+    width: 60%;
+}
+
+.containerSimulador2 h2{
+    color: #FFC857;
+    font-family: Garamond;
+    font-family: 'Inter', sans-serif;
+    font-size: 32px;
+    display: flex;
+    margin: 0 auto 12px;
+}
+
+.containerSimulador2 h3{
+    color: aliceblue;
+    line-height: 1.2;
+}
+
+.containerSimulador2 p{
+    color: aliceblue;
+    font-style: 'Inter', sans-serif;
+    line-height: 1.2;
+}
+
+.imagemSimulador2{
+    width: 30%;
+}
+
+.imagemSimulador2 img{
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    border-radius: 10px;
 }
