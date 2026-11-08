@@ -18,57 +18,89 @@
     --new-white: #E8E8E8;
 }
 
+/* Page layout and background for the quiz page */
 body {
     color: var(--new-black);
-    background-image: url("../../public/assets/imgs/piano_quiz.jpg");
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url("../assets/imgs/quiz_piano.jpg");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    font-family: Garamond, serif;
 }
 
+/* Existing utilities */
 button {
     font-family: monospace;
     font-weight: bold;
 }
-
 .flex-colunar {
     display: flex;
     flex-direction: column;
 }
-
 .width-fit-content {
     width: fit-content;
 }
-
 .border-primary {
     border: 3px solid var(--primary-brand-color);
 }
-
 .border-secondary {
     border: 3px solid var(--secondary-brand-color);
 }
-
 .padding-8 {
     padding: 8px;
 }
-
 .text-bold {
     font-weight: bold;
 }
 
+/* Colors for states — updated to softer tones per request */
 .text-success-with-bg {
-    color: var(--success-dark);
-    background-color: var(--success-light);
+    background: #FFDCA6; /* softer than #FFC857 */
+    color: #1a1a1a;
 }
-
 .text-warning-with-bg {
-    color: var(--warning-dark);
-    background-color: var(--warning-light);
+    background: #FFE8B5;
+    color: #1a1a1a;
 }
-
 .text-danger-with-bg {
-    color: var(--danger-dark);
-    background-color: var(--danger-light);
+    background: #F5A1A1; /* soft red for wrong answers */
+    color: #1a1a1a;
 }
-
 .text-new-gray {
     color: var(--new-gray);
+}
+
+/* Quiz card and option visual tweaks moved from inline style */
+#jogo {
+    background: #141414; /* card background */
+    color: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+    width: 100%;
+    max-width: 720px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+.option {
+    display: inline-block;
+    padding: 8px 12px;
+    margin-left: 6px;
+    border-radius: 8px;
+    cursor: pointer;
+    background: transparent;
+    color: #ffffff;
+}
+.option:hover {
+    background: rgba(255,255,255,0.04);
+}
+#btnIniciar {
+    background: #2e2e2e;
+    color: #fff;
+}
+#botoes button {
+    margin-right: 8px;
 }

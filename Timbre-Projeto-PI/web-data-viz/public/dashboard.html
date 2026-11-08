@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tela de Cadastro</title>
+    <script src="./js/sessao.js"></script>
+
+    <link rel="stylesheet" href="./css/dashboard1.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/dashboard.js" defer></script>
+</head>
+
+<body>
+
+    <div class="header">
+    <div class="container">
+        <div class="logo">
+            <h1 class="titulo">Timbre</h1>
+            <img src="assets/imgs/logo-timbre.png">
+        </div>
+            <ul class="navbar">
+            <li class="agora">
+                <a href="index.html">Inicial</a>
+            </li>
+            <li>
+                <a href="simulador.html">Explorar</a>
+            </li>
+            <li>
+                <a>|</a>
+            </li>
+            <li>
+                <a href="cadastro.html">Cadastro</a>
+            </li>
+            <li>
+                <a href="login.html">Login</a>
+            </li>
+            </ul>
+    </div>
+</div>
+
+    <div id="header-placeholder"></div>
+
+    <main class="dashboard-root">
+        <section class="dashboard-intro">
+            <h1>Olá, administrador!</h1>
+            <p>Confira os principais insights do Timbre.</p>
+        </section>
+
+        <section class="kpi-row">
+            <div class="kpi"> 
+                <div class="kpi-title">Total de Usuários</div>
+                <div class="kpi-value">1.250</div>
+            </div>
+            <div class="kpi"> 
+                <div class="kpi-title">Músicas Mais Acessadas</div>
+                <div class="kpi-value">Clair de Lune</div>
+            </div>
+            <div class="kpi"> 
+                <div class="kpi-title">Compositor Favorito</div>
+                <div class="kpi-value">Chopin</div>
+            </div>
+            <div class="kpi"> 
+                <div class="kpi-title">Média de Acertos</div>
+                <div class="kpi-value">78%</div>
+            </div>
+        </section>
+
+        <section class="charts-grid">
+            <div class="card">
+                <h3>Estilos Musicais</h3>
+                <canvas id="myChart1"></canvas>
+            </div>
+            <div class="card">
+                <h3>Engajamento</h3>
+                <canvas id="myChart2"></canvas>
+            </div>
+            <div class="card">
+                <h3>Top Compositores</h3>
+                <div class="top-list">
+                    <div>1. Chopin <span>28%</span></div>
+                    <div>2. Beethoven <span>24%</span></div>
+                    <div>3. Mozart <span>20%</span></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+</body>
+<script>
+    const labels = [
+        '0','100','200','300','400','500','600','700','800','900','1000'
+    ];
+
+    const labels2 = [
+        'Semana1',
+        'Semana2',
+        'Semana3',
+        'Semana4',
+        'Semana5',
+    ];
+
+    const labels3 = [
+        'Clássica',
+        'Romântica',
+        'Barroca',
+        'Contemporânea',
+        'Outros',
+    ];
+
+    const data = {
+        labels: labels3,
+        datasets: [{
+            label: 'Estilos Musicais',
+            data: [42, 32, 16, 10, 0],
+            backgroundColor: [
+                '#FFC857','#D4A373','#6A9FB5','#3B3B3B','#8D8D8D'
+            ],
+            hoverOffset: 6
+        }]
+    };
+
+    const data2 = {
+        labels: labels2,
+        datasets: [{
+            label: 'Engajamento',
+            data: [500, 650, 600, 900],
+            backgroundColor: 'transparent',
+            borderColor: '#FFC857',
+            pointBackgroundColor: '#FFC857',
+            tension: 0.3
+        }]
+    };
+
+const config = {
+    type: 'doughnut',
+    data: data,
+    options: {
+        plugins: { legend: { position: 'right', labels: { color: '#fff' } } }
+    }
+};
+
+const config2 = {
+  type: 'line',
+  data: data2,
+  options: {
+    scales: {
+      x: { ticks: { color: '#ddd' } },
+      y: { ticks: { color: '#ddd' } }
+    },
+    plugins: { legend: { display: false } }
+  }
+};
+
+</script>
+
+<script>
+    const myChart1 = new Chart(
+        document.getElementById("myChart1"),
+        config
+    );
+
+    const myChart2 = new Chart(
+        document.getElementById("myChart2"),
+        config2
+    );
+</script>
+</html>
