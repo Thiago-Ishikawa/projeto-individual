@@ -52,13 +52,16 @@ function autenticar(req, res) {
 
 }
 
+var bcrypt = require('bcryptjs');
+
 function cadastrar(req, res) {
     // Crie uma variável que vá recuperar os valores do arquivo cadastro.html
     var nome = req.body.nomeServer;
     var email = req.body.emailServer;
     var senha = req.body.senhaServer;
     var cpf = req.body.cpfServer;
-    var fkEmpresa = req.body.idEmpresaVincularServer;
+    var telefone = req.body.telefoneServer;
+    var fkEmpresa = req.body.idEmpresaVincularServer; // mantido, mas não usado por tabela atual
 
     // Faça as validações dos valores
     if (nome == undefined) {
@@ -69,26 +72,35 @@ function cadastrar(req, res) {
         res.status(400).send("Sua senha está undefined!");
      }else if (cpf == undefined) {
         res.status(400).send("Seu cpf está undefined!");
-    } else if (fkEmpresa == undefined) {
-        res.status(400).send("Sua empresa a vincular está undefined!");
-    } else {
+     } else {
 
-        // Passe os valores como parâmetro e vá para o arquivo usuarioModel.js
-        usuarioModel.cadastrar(nome, email, senha, cpf, fkEmpresa)
-            .then(
-                function (resultado) {
-                    res.json(resultado);
+        // Hash da senha antes de salvar (melhor prática)
+        var salt = bcrypt.genSaltSync(10);
+        var senhaHash = bcrypt.hashSync(senha, salt);
+
+        // 1) Inserir na tabela usuario
+        usuarioModel.cadastrar(nome, senhaHash, cpf)
+            .then(function (resultadoInserirUsuario) {
+                // resultadoInserirUsuario.insertId contém o id do usuário (id_usuario)
+                var idUsuario = resultadoInserirUsuario.insertId;
+
+                // 2) Se o frontend enviou email, inserir na tabela contato
+                if (email) {
+                    return usuarioModel.cadastrarContato(email, telefone, idUsuario)
+                        .then(function () {
+                            // responder sucesso apenas após inserir contato
+                            res.json({ mensagem: 'Cadastro e contato criados com sucesso' });
+                        });
+                } else {
+                    // sem email, respondemos apenas com sucesso de usuário
+                    res.json({ mensagem: 'Cadastro realizado com sucesso'});
                 }
-            ).catch(
-                function (erro) {
-                    console.log(erro);
-                    console.log(
-                        "\nHouve um erro ao realizar o cadastro! Erro: ",
-                        erro.sqlMessage
-                    );
-                    res.status(500).json(erro.sqlMessage);
-                }
-            );
+            })
+            .catch(function (erro) {
+                console.log(erro);
+                console.log("\nHouve um erro ao realizar o cadastro! Erro: ", erro.sqlMessage);
+                res.status(500).json(erro.sqlMessage);
+            });
     }
 }
 
