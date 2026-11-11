@@ -18,7 +18,6 @@
     --new-white: #E8E8E8;
 }
 
-/* Page layout and background for the quiz page */
 body {
     color: var(--new-black);
     margin: 0;
@@ -26,14 +25,24 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-image: url("../assets/imgs/quiz_piano.jpg");
+    background-image: url("../../public/assets/imgs/piano_quiz.jpg");
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
     font-family: Garamond, serif;
 }
 
-/* Existing utilities */
+/* Mini div de pontuação (acertos/erros) */
+#pontuacao {
+    font-family: Garamond, serif;
+    color: aliceblue;
+    border-radius: 16px;
+    padding: 10px;
+    width: 260px; /* tamanho proporcional e compacto em relação ao card principal */
+    max-width: 38%;
+    box-sizing: border-box;
+}
+
 button {
     font-family: monospace;
     font-weight: bold;
@@ -58,9 +67,8 @@ button {
     font-weight: bold;
 }
 
-/* Colors for states — updated to softer tones per request */
 .text-success-with-bg {
-    background: #FFDCA6; /* softer than #FFC857 */
+    background: #FFDCA6; 
     color: #1a1a1a;
 }
 .text-warning-with-bg {
@@ -68,16 +76,15 @@ button {
     color: #1a1a1a;
 }
 .text-danger-with-bg {
-    background: #F5A1A1; /* soft red for wrong answers */
+    background: #F5A1A1; 
     color: #1a1a1a;
 }
 .text-new-gray {
     color: var(--new-gray);
 }
 
-/* Quiz card and option visual tweaks moved from inline style */
 #jogo {
-    background: #141414; /* card background */
+    background: #141414; 
     color: #ffffff;
     border-radius: 16px;
     padding: 20px;
@@ -98,8 +105,11 @@ button {
     background: rgba(255,255,255,0.04);
 }
 #btnIniciar {
-    background: #2e2e2e;
-    color: #fff;
+    background: #FFC857;
+    color: #141414;
+    border-radius: 16px;
+    height: 40px;
+    width: 180px;
 }
 #botoes button {
     margin-right: 8px;

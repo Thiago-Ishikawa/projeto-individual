@@ -10,6 +10,7 @@ body {
     min-height: 100vh;
     display:flex;
     flex-direction: column;
+    background-color: #141414;
 }
 
 /* Page layout: sidebar + content */
@@ -122,8 +123,9 @@ body {
     color: #F8F3EE;
     box-shadow: 0 6px 18px rgba(2,2,2,0.6) inset;
 }
-.kpi-title{ color: #D3C6B8; font-size: 13px; display:flex; align-items:center; gap:8px }
-.kpi-value{ font-size: 26px; margin-top: 6px; font-weight:700 }
+.kpi-inner{ display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:86px }
+.kpi-title{ color: #D3C6B8; font-size: 13px; display:block; text-align:center }
+.kpi-value{ font-size: 26px; margin-top: 6px; font-weight:700; text-align:center }
 
 .kpi .icon{ color:#FFC857; font-size:18px }
 
@@ -145,6 +147,10 @@ body {
 .top-list div{ display:flex; justify-content:space-between; align-items:center; padding:10px 0; color:#D9D0C6 }
 .top-list div span{ color:#FFC857; font-weight:700 }
 
+/* center card headings and charts */
+.card h3{ text-align: center; font-family: Garamond, serif; }
+.card canvas{ display:block; margin: 0 auto; }
+
 /* small visual touches */
 .card::after{ content:''; display:block; height:1px; margin-top:12px; background: linear-gradient(90deg, transparent, rgba(255,200,87,0.06), transparent) }
 
@@ -154,3 +160,13 @@ body {
     .dashboard-root{ width: calc(100% - 40px); margin: 20px; }
     .sidebar{ display:none }
 }
+
+/* Period filter styles */
+.period-filter select{
+    background: rgba(255,255,255,0.02);
+    color: #f0e9e2;
+    border: 1px solid rgba(255,200,87,0.12);
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+.sr-only{ position:absolute; left:-9999px; }

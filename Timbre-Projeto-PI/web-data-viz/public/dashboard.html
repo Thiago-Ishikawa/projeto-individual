@@ -7,7 +7,7 @@
     <title>Tela de Cadastro</title>
     <script src="./js/sessao.js"></script>
 
-    <link rel="stylesheet" href="./css/dashboard1.css">
+    <link rel="stylesheet" href="./css/dashboard.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/dashboard.js" defer></script>
 </head>
@@ -25,13 +25,25 @@
                 <a href="index.html">Inicial</a>
             </li>
             <li>
+                <a>|</a>
+            </li>
+            <li>
                 <a href="simulador.html">Explorar</a>
             </li>
             <li>
                 <a>|</a>
             </li>
             <li>
+                <a href="dashboard.html">Dashboard</a>
+            </li>
+            <li>
+                <a>|</a>
+            </li>
+            <li>
                 <a href="cadastro.html">Cadastro</a>
+            </li>
+            <li>
+                <a>|</a>
             </li>
             <li>
                 <a href="login.html">Login</a>
@@ -44,26 +56,47 @@
 
     <main class="dashboard-root">
         <section class="dashboard-intro">
-            <h1>Olá, administrador!</h1>
-            <p>Confira os principais insights do Timbre.</p>
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+                <div>
+                    <h1>Olá, administrador!</h1>
+                    <p>Confira os principais insights do Timbre.</p>
+                </div>
+                <div class="period-filter">
+                    <label for="period-select" class="sr-only">Período</label>
+                    <select id="period-select" aria-label="Selecionar período">
+                        <option value="30">Últimos 30 dias</option>
+                        <option value="7">Última semana</option>
+                        <option value="30m">Último mês</option>
+                        <option value="90">Últimos 90 dias</option>
+                    </select>
+                </div>
+            </div>
         </section>
 
         <section class="kpi-row">
             <div class="kpi"> 
-                <div class="kpi-title">Total de Usuários</div>
-                <div class="kpi-value">1.250</div>
+                <div class="kpi-inner">
+                    <div class="kpi-title">Total de Usuários</div>
+                    <div class="kpi-value">1.250</div>
+                </div>
             </div>
             <div class="kpi"> 
-                <div class="kpi-title">Músicas Mais Acessadas</div>
-                <div class="kpi-value">Clair de Lune</div>
+                <div class="kpi-inner">
+                    <div class="kpi-title">Músicas Mais Acessadas</div>
+                    <div class="kpi-value">Clair de Lune</div>
+                </div>
             </div>
             <div class="kpi"> 
-                <div class="kpi-title">Compositor Favorito</div>
-                <div class="kpi-value">Chopin</div>
+                <div class="kpi-inner">
+                    <div class="kpi-title">Compositor Favorito</div>
+                    <div class="kpi-value">Chopin</div>
+                </div>
             </div>
             <div class="kpi"> 
-                <div class="kpi-title">Média de Acertos</div>
-                <div class="kpi-value">78%</div>
+                <div class="kpi-inner">
+                    <div class="kpi-title">Média de Acertos</div>
+                    <div class="kpi-value">78%</div>
+                </div>
             </div>
         </section>
 
@@ -165,5 +198,26 @@ const config2 = {
         document.getElementById("myChart2"),
         config2
     );
+</script>
+<script>
+    // simple period filter behaviour: changes sample data for demo and recenters charts
+    (function(){
+        const sel = document.getElementById('period-select');
+        if(!sel) return;
+
+        sel.addEventListener('change', function(){
+            const v = sel.value;
+            // lightweight demo: change engagement dataset depending on selection
+            if(v === '7'){
+                myChart2.data.datasets[0].data = [300, 700, 650, 800];
+            } else if (v === '90'){
+                myChart2.data.datasets[0].data = [200,400,450,700];
+            } else {
+                // default 30 days
+                myChart2.data.datasets[0].data = [500,650,600,900];
+            }
+            myChart2.update();
+        });
+    })();
 </script>
 </html>
