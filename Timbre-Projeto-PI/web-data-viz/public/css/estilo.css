@@ -210,6 +210,11 @@ button {
     line-height: 1.2;
 }
 
+a {
+    margin-left: 1%;
+    text-decoration: none;
+}
+
 .containerCadastro span{
     color: aliceblue;
     display: flex;
@@ -244,6 +249,11 @@ button {
     border: none;
     height: 38px;
     margin: auto;
+}
+
+.containerCadastro button:hover{
+    transform: translateY(2px);
+    box-shadow: 0 2px 0;
 }
 
 /* Tela Login*/
@@ -327,6 +337,11 @@ button {
     margin-top: 40px;
 }
 
+.containerLogin button:hover{
+    transform:translateY(2px);
+    box-shadow: 0 2px 0;
+}
+
 
 /*Simulador*/
 .containerSimulador{
@@ -392,7 +407,7 @@ button {
     margin: auto;
 }
 
-.containerSimulador button :hover{
+.containerSimulador button:hover{
     transform: translateY(2px);
     box-shadow: 0 2px 0;
 }
