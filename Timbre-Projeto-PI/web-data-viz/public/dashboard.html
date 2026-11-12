@@ -58,7 +58,7 @@
         <section class="dashboard-intro">
             <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
                 <div>
-                    <h1>Olá, administrador!</h1>
+                    <h1><span style="color: #FFC857;">Olá, seja bem-vindo!</span></h1>
                     <p>Confira os principais insights do Timbre.</p>
                 </div>
                 <div class="period-filter">
@@ -115,6 +115,8 @@
                     <div>1. Chopin <span>28%</span></div>
                     <div>2. Beethoven <span>24%</span></div>
                     <div>3. Mozart <span>20%</span></div>
+                    <div>4. Johann Pachelbel <span>10%</span></div>
+                    <div>5. Tchaikovsky <span>18%</span></div>
                 </div>
             </div>
         </section>
@@ -166,10 +168,13 @@
         }]
     };
 
+
 const config = {
     type: 'doughnut',
     data: data,
     options: {
+        responsive: true,
+        maintainAspectRatio: false,
         plugins: { legend: { position: 'right', labels: { color: '#fff' } } }
     }
 };
@@ -178,6 +183,8 @@ const config2 = {
   type: 'line',
   data: data2,
   options: {
+    responsive: true,
+    maintainAspectRatio: false,
     scales: {
       x: { ticks: { color: '#ddd' } },
       y: { ticks: { color: '#ddd' } }
@@ -198,6 +205,7 @@ const config2 = {
         document.getElementById("myChart2"),
         config2
     );
+
 </script>
 <script>
     // simple period filter behaviour: changes sample data for demo and recenters charts

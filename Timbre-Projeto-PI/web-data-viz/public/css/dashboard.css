@@ -13,7 +13,7 @@ body {
     background-color: #141414;
 }
 
-/* Page layout: sidebar + content */
+/* Página layout: sidebar + content */
 .page-wrapper{
     display:flex;
     min-height: calc(100vh - 0px);
@@ -86,11 +86,6 @@ body {
     text-decoration: none;
 }
 
-.bannerDashboard{
-
-}
-
-/* Dashboard specific styles */
 .dashboard-root{
     width: calc(100% - 260px);
     margin: 28px 32px;
@@ -141,18 +136,20 @@ body {
     border-radius: 14px;
     color: #F8F3EE;
     box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+    position: relative;
+    height: 305px;
 }
 .card h3{ margin-bottom: 12px; color:#EDE3DA }
-.card canvas{ width: 100% !important; height: 220px !important; }
+.card canvas{ width: 100% !important; height: 240px !important; max-height: 240px;}
 .top-list div{ display:flex; justify-content:space-between; align-items:center; padding:10px 0; color:#D9D0C6 }
 .top-list div span{ color:#FFC857; font-weight:700 }
 
-/* center card headings and charts */
+
 .card h3{ text-align: center; font-family: Garamond, serif; }
 .card canvas{ display:block; margin: 0 auto; }
 
-/* small visual touches */
 .card::after{ content:''; display:block; height:1px; margin-top:12px; background: linear-gradient(90deg, transparent, rgba(255,200,87,0.06), transparent) }
+
 
 @media (max-width: 1000px){
     .charts-grid{ grid-template-columns: 1fr; }
@@ -161,7 +158,6 @@ body {
     .sidebar{ display:none }
 }
 
-/* Period filter styles */
 .period-filter select{
     background: rgba(255,255,255,0.02);
     color: #f0e9e2;
