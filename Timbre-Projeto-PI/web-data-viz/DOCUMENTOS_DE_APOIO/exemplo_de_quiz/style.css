@@ -114,3 +114,13 @@ button {
 #botoes button {
     margin-right: 8px;
 }
+
+.option.text-success-with-bg {
+    background: #FFDCA6;
+    color: #1a1a1a;
+}
+
+.option.text-danger-with-bg {
+    background: #F5A1A1;
+    color: #1a1a1a;
+}

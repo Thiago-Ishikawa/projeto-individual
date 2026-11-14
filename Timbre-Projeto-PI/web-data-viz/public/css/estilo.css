@@ -104,6 +104,11 @@ button {
     border-color: #FFC857;
 }
 
+button:hover{
+    transform: translateY(2px);
+    box-shadow: 0 2px 0;
+}
+
 .footer{
     width: 100%;   
     background-color: #101010;

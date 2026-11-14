@@ -1,0 +1,126 @@
+/* Não usar pure white or pure black: https://uxplanet.org/basicdesign-never-use-pure-black-in-typography-36138a3327a6 */
+/* The 4-point grid system: https://medium.com/@sainzkike/controlling-spacing-in-design-systems-multiple-spacing-9bf1afec87f */
+
+:root {
+    --primary-brand-color: #FFC857;
+    --secondary-brand-color: #FFC857;
+    --success: #198754;
+    --success-dark: #095c36;
+    --success-light: #9dd3ba;
+    --warning: #ffc107;
+    --warning-dark: #705400;
+    --warning-light: #fdebb3;
+    --danger: #dc3545;
+    --danger-dark: #990c19;
+    --danger-light: #f0c1c6;
+    --new-gray: #CCCCCC;
+    --new-black: #212427;
+    --new-white: #E8E8E8;
+}
+
+body {
+    color: var(--new-black);
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url("/assets/imgs/piano_quiz.jpg");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    font-family: Garamond, serif;
+}
+
+/* Mini div de pontuação (acertos/erros) */
+#pontuacao {
+    font-family: Garamond, serif;
+    color: aliceblue;
+    border-radius: 16px;
+    padding: 10px;
+    width: 260px; /* tamanho proporcional e compacto em relação ao card principal */
+    max-width: 38%;
+    box-sizing: border-box;
+}
+
+button {
+    font-family: monospace;
+    font-weight: bold;
+}
+.flex-colunar {
+    display: flex;
+    flex-direction: column;
+}
+.width-fit-content {
+    width: fit-content;
+}
+.border-primary {
+    border: 3px solid var(--primary-brand-color);
+}
+.border-secondary {
+    border: 3px solid var(--secondary-brand-color);
+}
+.padding-8 {
+    padding: 8px;
+}
+.text-bold {
+    font-weight: bold;
+}
+
+.text-success-with-bg {
+    background: #FFDCA6; 
+    color: #1a1a1a;
+}
+.text-warning-with-bg {
+    background: #FFE8B5;
+    color: #1a1a1a;
+}
+.text-danger-with-bg {
+    background: #F5A1A1; 
+    color: #1a1a1a;
+}
+.text-new-gray {
+    color: var(--new-gray);
+}
+
+#jogo {
+    background: #141414; 
+    color: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+    width: 100%;
+    max-width: 720px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+.option {
+    display: inline-block;
+    padding: 8px 12px;
+    margin-left: 6px;
+    border-radius: 8px;
+    cursor: pointer;
+    background: transparent;
+    color: #ffffff;
+}
+.option:hover {
+    background: rgba(255,255,255,0.04);
+}
+#btnIniciar {
+    background: #FFC857;
+    color: #141414;
+    border-radius: 16px;
+    height: 40px;
+    width: 180px;
+}
+#botoes button {
+    margin-right: 8px;
+}
+
+.option.text-success-with-bg {
+    background: #FFDCA6;
+    color: #1a1a1a;
+}
+
+.option.text-danger-with-bg {
+    background: #F5A1A1;
+    color: #1a1a1a;
+}
