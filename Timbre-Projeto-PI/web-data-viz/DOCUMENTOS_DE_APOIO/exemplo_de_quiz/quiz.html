@@ -6,6 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Timbre</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* manter tamanho fixo do container da pergunta e do painel de pontuação */
+        #perguntaDaQuestaoAtual { min-height: 90px; max-height: 120px; overflow: auto; }
+        #jogo { min-width: 420px; }
+        #pontuacao { min-width: 220px; min-height: 80px; }
+        /* garantir que labels das alternativas não quebrem o layout */
+        .option { display: inline-block; max-width: 360px; word-wrap: break-word; }
+    </style>
 </head>
 </head>
 
@@ -13,6 +21,7 @@
     <div>
         <div id="pontuacaoEjogo">
             <button id="btnIniciar" onclick="iniciar()">Iniciar Quiz</button>
+            <span id="msgSemQuiz" style="color:#f2b8b8; margin-left:12px; display:none">Nenhum quiz disponível no servidor.</span>
         <div id="pontuacao" class="flex-colunar width-fit-content border-primary">
         <div id="pontuacaoDuranteJogo" class="flex-colunar padding-8">
             <span class="width-fit-content">Quantidade de acertos: <span id="spanCertas"></span></span>
@@ -72,217 +81,282 @@
 </body>
 
 <script>
-    const listaDeQuestoes = [
-    {
-        pergunta: "A Obra Rondo Alla Turca foi composta por qual compositor?",
-        alternativaA: "Ludwig van Beethoven",
-        alternativaB: "Frédéric Chopin",
-        alternativaC: "Wolfgang Amadeus Mozart",
-        alternativaD: "Claude Debussy",
-        alternativaCorreta: "alternativaC"
-    },
 
+let listaDeQuestoes = [
     {
-        pergunta: "Qual gênero musical você mais gosta de ouvir?",
-        alternativaA: "Clássico",
-        alternativaB: "Barroco",
-        alternativaC: "Romântico",
-        alternativaD: "Impressionista",
-        alternativaCorreta: ""
+        id_pergunta: 1,
+        pergunta: 'Quem compôs a Nona Sinfonia?',
+        tipo: 'unica',
+        alternativas: [
+            { id: 11, texto: 'Ludwig van Beethoven' },
+            { id: 12, texto: 'Wolfgang Amadeus Mozart' },
+            { id: 13, texto: 'Johann Sebastian Bach' },
+            { id: 14, texto: 'Frédéric Chopin' }
+        ]
     },
-
     {
-        pergunta: "Quantas teclas tem um piano acústico padrão?",
-        alternativaA: "55",
-        alternativaB: "88",
-        alternativaC: "85",
-        alternativaD: "72",
-        alternativaCorreta: "alternativaB"
+        id_pergunta: 2,
+        pergunta: 'Quantas teclas tem um piano acústico padrão?',
+        tipo: 'unica',
+        alternativas: [
+            { id: 21, texto: '55' },
+            { id: 22, texto: '88' },
+            { id: 23, texto: '85' },
+            { id: 24, texto: '72' }
+        ]
+    },
+    {
+    id_pergunta: 3,
+    pergunta: 'Qual é a função dos pedais de um piano?',
+    tipo: 'unica',
+    alternativas: [
+        { id: 31, texto: 'Alterar o volume das teclas' },
+        { id: 32, texto: 'Modificar a sonoridade das notas' },
+        { id: 33, texto: 'Aumentar a quantidade de teclas' },
+        { id: 34, texto: 'Afinar automaticamente o piano' }
+    ]
+    },
+    {
+        id_pergunta: 4,
+        pergunta: 'Qual é o nome das teclas pretas do piano?',
+        tipo: 'unica',
+        alternativas: [
+            { id: 41, texto: 'Naturais' },
+            { id: 42, texto: 'Sustenidos e bemóis' },
+            { id: 43, texto: 'Harmônicas' },
+            { id: 44, texto: 'Diatrônicas' }
+        ]
+    },
+    {
+        id_pergunta: 5,
+        pergunta: 'Qual instrumento produz o som através de martelos que atingem cordas?',
+        tipo: 'unica',
+        alternativas: [
+            { id: 51, texto: 'Violino' },
+            { id: 52, texto: 'Flauta' },
+            { id: 53, texto: 'Piano acústico' },
+            { id: 54, texto: 'Trompete' }
+        ]
+    },
+    {
+        id_pergunta: 6,
+        pergunta: 'Qual é a função do pedal sustain?',
+        tipo: 'unica',
+        alternativas: [
+            { id: 61, texto: 'Aumentar a velocidade das notas' },
+            { id: 62, texto: 'Manter as notas soando por mais tempo' },
+            { id: 63, texto: 'Diminuir a afinação' },
+            { id: 64, texto: 'Deixar o som mais grave' }
+        ]
+    },
+    {
+        id_pergunta: 7,
+        pergunta: 'Qual é a primeira nota da sequência musical natural?',
+        tipo: 'unica',
+        alternativas: [
+            { id: 71, texto: 'Ré' },
+            { id: 72, texto: 'Mi' },
+            { id: 73, texto: 'Dó' },
+            { id: 74, texto: 'Sol' }
+        ]
+    },
+    {
+        id_pergunta: 8,
+        pergunta: 'Qual compositor é conhecido por obras como Sonata ao Luar?',
+        tipo: 'unica',
+        alternativas: [
+            { id: 81, texto: 'Wolfgang Amadeus Mozart' },
+            { id: 82, texto: 'Ludwig van Beethoven' },
+            { id: 83, texto: 'Frédéric Chopin' },
+            { id: 84, texto: 'Johann Sebastian Bach' }
+        ]
+    },
+    {
+        id_pergunta: 9,
+        pergunta: 'Como são chamadas as teclas brancas do piano?',
+        tipo: 'unica',
+        alternativas: [
+            { id: 91, texto: 'Teclas naturais' },
+            { id: 92, texto: 'Teclas cromáticas' },
+            { id: 93, texto: 'Teclas harmônicas' },
+            { id: 94, texto: 'Teclas alteradas' }
+        ]
     }
-
-]
-
-// variáveis globais    
-let numeroDaQuestaoAtual = 0
-let pontuacaoFinal = 0
-let tentativaIncorreta = 0
-let certas = 0
-let erradas = 0
-let quantidadeDeQuestoes = listaDeQuestoes.length
-// let isUltima = numeroDaQuestaoAtual == quantidadeDeQuestoes-1 ? true : false
+];
+let numeroDaQuestaoAtual = 0;
+let pontuacaoFinal = 0;
+let tentativaIncorreta = 0;
+let certas = 0;
+let erradas = 0;
+let quantidadeDeQuestoes = 0;
+let quizId = null; // será obtido do backend ou definido pelo usuário
+let idTentativa = null;
 
 function onloadEsconder() {
-    document.getElementById('pontuacao').style.display = "none"
-    document.getElementById('jogo').style.display = "none"
+    document.getElementById('pontuacao').style.display = "none";
+    document.getElementById('jogo').style.display = "none";
+}
+
+// No auto-load of quiz content. Leave fields empty so user can add questions later.
+function carregarQuiz() {
+    // intentionally empty: quiz questions are not auto-filled
+    quantidadeDeQuestoes = listaDeQuestoes.length;
+    document.getElementById('qtdQuestoes').innerHTML = quantidadeDeQuestoes;
 }
 
 function iniciar() {
-    document.getElementById('pontuacao').style.display = "flex"
-    document.getElementById('jogo').style.display = "flex"
-    document.getElementById('btnIniciar').style.display = "none"
+    document.getElementById('pontuacao').style.display = "flex";
+    document.getElementById('jogo').style.display = "flex";
+    document.getElementById('btnIniciar').style.display = "none";
 
-    document.getElementById('qtdQuestoes').innerHTML = quantidadeDeQuestoes
-
-    preencherHTMLcomQuestaoAtual(0)
-
-    document.getElementById('btnSubmeter').disabled = false
-    document.getElementById('btnProx').disabled = true
-    // btnConcluir.disabled = true
-    document.getElementById('btnTentarNovamente').disabled = true
+    var userId = sessionStorage.ID_USUARIO || sessionStorage.ID || 1;
+    fetch('/quiz/' + quizId + '/iniciar', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-user-id': userId }, body: JSON.stringify({}) })
+        .then(function(r){
+            if (!r.ok) return r.text().then(function(t){ throw new Error(t || 'Erro ao iniciar tentativa'); });
+            // try parse json safely
+            return r.text().then(function(t){ try { return JSON.parse(t); } catch(e){ return {}; } });
+        }).then(function(json){
+            idTentativa = json.id_tentativa || null;
+            quantidadeDeQuestoes = listaDeQuestoes.length;
+            document.getElementById('qtdQuestoes').innerHTML = quantidadeDeQuestoes;
+            preencherHTMLcomQuestaoAtual(0);
+            document.getElementById('btnSubmeter').disabled = false;
+            document.getElementById('btnProx').disabled = true;
+            document.getElementById('btnTentarNovamente').disabled = true;
+        }).catch(function(err){
+            // show server message or generic
+            alert('Erro ao iniciar a tentativa: ' + (err && err.message ? err.message : 'ver console'));
+            console.error('Erro iniciar tentativa', err);
+        });
 }
 
 function preencherHTMLcomQuestaoAtual(index) {
-    habilitarAlternativas(true)
-    const questaoAtual = listaDeQuestoes[index]
-    numeroDaQuestaoAtual = index
-    console.log("questaoAtual")
-    console.log(questaoAtual)
-    document.getElementById("spanNumeroDaQuestaoAtual").innerHTML = Number(index) + 1 // ajustando porque o index começa em 0
-    document.getElementById("spanQuestaoExibida").innerHTML = questaoAtual.pergunta;
-    document.getElementById("labelOpcaoUm").innerHTML = questaoAtual.alternativaA;
-    document.getElementById("labelOpcaoDois").innerHTML = questaoAtual.alternativaB;
-    document.getElementById("labelOpcaoTres").innerHTML = questaoAtual.alternativaC;
-    document.getElementById("labelOpcaoQuatro").innerHTML = questaoAtual.alternativaD;
-}
-
-function submeter() {
-    const options = document.getElementsByName("option"); // recupera alternativas no html
-
-    let hasChecked = false
-    for (let i = 0; i < options.length; i++) {
-        if (options[i].checked) {
-            hasChecked = true
-            break
+    habilitarAlternativas(true);
+    const questaoAtual = listaDeQuestoes[index];
+    numeroDaQuestaoAtual = index;
+    document.getElementById('spanNumeroDaQuestaoAtual').innerHTML = Number(index) + 1;
+    document.getElementById('spanQuestaoExibida').innerHTML = questaoAtual.pergunta || '';
+    var labels = ['labelOpcaoUm','labelOpcaoDois','labelOpcaoTres','labelOpcaoQuatro'];
+    var radios = document.getElementsByName('option');
+    for (var i=0;i<4;i++){
+        var lab = document.getElementById(labels[i]);
+        if (questaoAtual.alternativas[i]){
+            lab.innerHTML = questaoAtual.alternativas[i].texto;
+            lab.dataset.altId = questaoAtual.alternativas[i].id;
+            radios[i].value = questaoAtual.alternativas[i].id;
+            labsShow(lab, radios[i], true);
+        } else {
+            lab.innerHTML = '';
+            lab.dataset.altId = '';
+            radios[i].value = '';
+            labsShow(lab, radios[i], false);
         }
     }
-
-    if (!hasChecked) {
-        alert("Não há alternativas escolhidas. Escolha uma opção.")
-    } else {
-        btnSubmeter.disabled = true
-        btnProx.disabled = false
-
-        habilitarAlternativas(false)
-
-        checarResposta()
-    }
 }
 
-function habilitarAlternativas(trueOrFalse) {
-    let opcaoEscolhida = trueOrFalse ? false : true
-
-    primeiraOpcao.disabled = opcaoEscolhida
-    segundaOpcao.disabled = opcaoEscolhida
-    terceiraOpcao.disabled = opcaoEscolhida
-    quartaOpcao.disabled = opcaoEscolhida
-
+function labsShow(label, radio, show){
+    label.style.display = show ? '' : 'none';
+    radio.style.display = show ? '' : 'none';
 }
 
-function avancar() {
-    btnProx.disabled = true
-    btnSubmeter.disabled = false
-
-    desmarcarRadioButtons()
-
-    if (numeroDaQuestaoAtual < quantidadeDeQuestoes - 1) {
-        preencherHTMLcomQuestaoAtual(numeroDaQuestaoAtual)
-    } else if (numeroDaQuestaoAtual == quantidadeDeQuestoes - 1) {
-        alert("Atenção... a próxima é a ultima questão!")
-        preencherHTMLcomQuestaoAtual(numeroDaQuestaoAtual)
-    } else {
-        finalizarJogo()
-    }
-    limparCoresBackgroundOpcoes()
+function submeter(){
+    const options = document.getElementsByName('option');
+    let hasChecked = false; var chosen = null;
+    for (let i=0;i<options.length;i++){ if (options[i].checked){ hasChecked=true; chosen=options[i]; break; } }
+    if (!hasChecked){ alert('Não há alternativas escolhidas. Escolha uma opção.'); return; }
+    document.getElementById('btnSubmeter').disabled = true; document.getElementById('btnProx').disabled = false;
+    habilitarAlternativas(false);
+    var fk_pergunta = listaDeQuestoes[numeroDaQuestaoAtual].id_pergunta;
+    var fk_alternativa = chosen ? chosen.value : null;
+    fetch('/quiz/tentativa/' + idTentativa + '/responder', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fk_pergunta: fk_pergunta, fk_alternativa: fk_alternativa }) })
+        .then(r=>r.json()).then(function(){ checarResposta(); }).catch(function(err){ console.error('erro ao enviar resposta',err); checarResposta(); });
 }
 
-function tentarNovamente() {
-    // atualiza a página
-    window.location.reload()
+function habilitarAlternativas(trueOrFalse){
+    let opcaoEscolhida = trueOrFalse ? false : true;
+    primeiraOpcao.disabled = opcaoEscolhida; segundaOpcao.disabled = opcaoEscolhida; terceiraOpcao.disabled = opcaoEscolhida; quartaOpcao.disabled = opcaoEscolhida;
 }
 
-function checarResposta() {
-    const questaoAtual = listaDeQuestoes[numeroDaQuestaoAtual] // questão atual 
-    const respostaQuestaoAtual = questaoAtual.alternativaCorreta // qual é a resposta correta da questão atual
+function avancar(){
+    btnProx.disabled = true; btnSubmeter.disabled = false; desmarcarRadioButtons();
+    if (numeroDaQuestaoAtual < quantidadeDeQuestoes - 1) { preencherHTMLcomQuestaoAtual(numeroDaQuestaoAtual+1); }
+    else { finalizarJogo(); }
+    limparCoresBackgroundOpcoes();
+}
 
-    const options = document.getElementsByName("option"); // recupera alternativas no html
+function desmarcarRadioButtons(){ const options = document.getElementsByName('option'); for (let i=0;i<options.length;i++) options[i].checked=false; }
 
-    let alternativaCorreta = null // variável para armazenar a alternativa correta
+function checarResposta(){
+    const questaoAtual = listaDeQuestoes[numeroDaQuestaoAtual];
+    const options = document.getElementsByName('option');
+    var corretaId = null; // we don't have correct flag client-side
+    var chosen = null;
+    for (let i=0;i<options.length;i++){ if (options[i].checked) chosen = options[i]; }
+    // basic local feedback: mark chosen as success (we'll rely on server for final scoring)
+    if (chosen){ document.getElementById(chosen.labels[0].id).classList.add('text-success-with-bg'); certas++; document.getElementById('spanCertas').innerHTML = certas; }
+    // não incrementamos aqui — o avanço é controlado pelo botão "Avançar" para evitar pular questões
+}
 
-    options.forEach((option) => {
-        if (option.value === respostaQuestaoAtual) {
-            console.log("alternativaCorreta está no componente: " + alternativaCorreta)
-            alternativaCorreta = option.labels[0].id
+function limparCoresBackgroundOpcoes(){ const options = document.getElementsByName('option'); for (let i=0;i<options.length;i++){ if (options[i].labels && options[i].labels[0]){ document.getElementById(options[i].labels[0].id).classList.remove('text-danger-with-bg'); document.getElementById(options[i].labels[0].id).classList.remove('text-success-with-bg'); } } }
+
+function finalizarJogo(){
+    const porcentagemFinalDeAcertos = (quantidadeDeQuestoes>0) ? (certas/quantidadeDeQuestoes) : 0;
+    let textoParaMensagemFinal = null; let classComCoresParaMensagemFinal = null;
+    if (porcentagemFinalDeAcertos <= 0.3){ textoParaMensagemFinal = 'Parece que você não estudou...'; classComCoresParaMensagemFinal = 'text-danger-with-bg'; }
+    else if (porcentagemFinalDeAcertos > 0.3 && porcentagemFinalDeAcertos < 0.9){ textoParaMensagemFinal = 'Pode melhorar na próxima, hein!'; classComCoresParaMensagemFinal = 'text-warning-with-bg'; }
+    else { textoParaMensagemFinal = 'Uau, parabéns!'; classComCoresParaMensagemFinal = 'text-success-with-bg'; }
+    textoParaMensagemFinal += '<br> Você acertou ' + Math.round((porcentagemFinalDeAcertos)*100) + '% das questões.';
+    document.getElementById('msgFinal').innerHTML = textoParaMensagemFinal; document.getElementById('msgFinal').classList.add(classComCoresParaMensagemFinal);
+    document.getElementById('spanPontuacaoFinal').innerHTML = certas;
+    document.getElementById('jogo').classList.add('text-new-gray'); btnProx.disabled = true; btnSubmeter.disabled = true; btnTentarNovamente.disabled = false;
+    // concluir tentativa no backend
+    if (idTentativa){ fetch('/quiz/tentativa/' + idTentativa + '/concluir', { method: 'POST' }).then(r=>r.json()).then(function(res){ console.log('Resultado servidor:', res); }).catch(function(err){ console.error('erro ao concluir',err); }); }
+}
+
+function tentarNovamente(){
+    // resetar estado do jogo para começar desde a primeira questão
+    numeroDaQuestaoAtual = 0;
+    certas = 0; erradas = 0; tentativaIncorreta = 0;
+    document.getElementById('spanCertas').innerHTML = certas;
+    document.getElementById('spanErradas').innerHTML = erradas;
+    document.getElementById('msgFinal').innerHTML = '';
+    document.getElementById('msgFinal').className = '';
+    document.getElementById('jogo').classList.remove('text-new-gray');
+    desmarcarRadioButtons(); limparCoresBackgroundOpcoes();
+    preencherHTMLcomQuestaoAtual(0);
+    document.getElementById('btnSubmeter').disabled = false;
+    document.getElementById('btnProx').disabled = true;
+    document.getElementById('btnTentarNovamente').disabled = true;
+    // se houver uma tentativa no servidor, pode-se iniciar nova tentativa; opcional: reiniciar tentativa backend
+}
+
+// load quiz on page load
+// tenta obter um quiz válido do backend ao carregar a página
+function obterQuizPadrao() {
+    // tenta buscar quizzes disponíveis e usar o primeiro como padrão
+    fetch('/quiz').then(function (r) {
+        if (!r.ok) return null;
+        return r.json().catch(function () { return null; });
+    }).then(function (lista) {
+        if (lista && Array.isArray(lista) && lista.length > 0) {
+            quizId = lista[0].id_quiz || lista[0].id || 1; // fallback para 1
+            // habilita botão iniciar caso estivesse desabilitado
+            var btn = document.getElementById('btnIniciar'); if (btn) { btn.disabled = false; }
+            var msg = document.getElementById('msgSemQuiz'); if (msg) { msg.style.display = 'none'; }
+        } else {
+            // se não houver quizzes no backend, manter nulo e avisar o usuário
+            quizId = null;
+            console.warn('Nenhum quiz encontrado no backend; inicie manualmente definindo quizId se necessário.');
+            var btn = document.getElementById('btnIniciar'); if (btn) { btn.disabled = true; }
+            var msg = document.getElementById('msgSemQuiz'); if (msg) { msg.style.display = ''; }
         }
-    })
-
-    // verifica se resposta assinalada é correta
-    options.forEach((option) => {
-        if (option.checked === true && option.value === respostaQuestaoAtual) {
-            document.getElementById(alternativaCorreta).classList.add("text-success-with-bg")
-            pontuacaoFinal++
-            certas++
-            document.getElementById("spanCertas").innerHTML = certas
-            numeroDaQuestaoAtual++
-        } else if (option.checked && option.value !== respostaQuestaoAtual) {
-            const wrongLabelId = option.labels[0].id
-
-            document.getElementById(wrongLabelId).classList.add("text-danger-with-bg")
-            document.getElementById(alternativaCorreta).classList.add("text-success-with-bg")
-            tentativaIncorreta++
-            erradas++
-            document.getElementById("spanErradas").innerHTML = erradas
-            numeroDaQuestaoAtual++
-        }
-    })
+    }).catch(function () {
+        console.warn('Não foi possível acessar /quiz; usando comportamento local (quizId indefinido).');
+        var btn = document.getElementById('btnIniciar'); if (btn) { btn.disabled = true; }
+        var msg = document.getElementById('msgSemQuiz'); if (msg) { msg.style.display = ''; }
+    });
 }
 
-function limparCoresBackgroundOpcoes() {
-    const options = document.getElementsByName("option");
-    options.forEach((option) => {
-        document.getElementById(option.labels[0].id).classList.remove("text-danger-with-bg")
-        document.getElementById(option.labels[0].id).classList.remove("text-success-with-bg")
-    })
-}
-
-function desmarcarRadioButtons() {
-    const options = document.getElementsByName("option");
-    for (let i = 0; i < options.length; i++) {
-        options[i].checked = false;
-    }
-}
-
-function finalizarJogo() {
-    let textoParaMensagemFinal = null
-    let classComCoresParaMensagemFinal = null
-    const porcentagemFinalDeAcertos = pontuacaoFinal / quantidadeDeQuestoes
-
-    if (porcentagemFinalDeAcertos <= 0.3) {
-        textoParaMensagemFinal = "Parece que você não estudou..."
-        classComCoresParaMensagemFinal = "text-danger-with-bg"
-    }
-    else if (porcentagemFinalDeAcertos > 0.3 && porcentagemFinalDeAcertos < 0.9) {
-        textoParaMensagemFinal = "Pode melhorar na próxima, hein!"
-        classComCoresParaMensagemFinal = "text-warning-with-bg"
-    }
-    else if (porcentagemFinalDeAcertos >= 0.9) {
-        textoParaMensagemFinal = "Uau, parabéns!"
-        classComCoresParaMensagemFinal = "text-success-with-bg"
-    }
-
-    textoParaMensagemFinal += "<br> Você acertou " + Math.round((porcentagemFinalDeAcertos)*100) + "% das questões."
-
-
-    document.getElementById('msgFinal').innerHTML = textoParaMensagemFinal
-    document.getElementById('msgFinal').classList.add(classComCoresParaMensagemFinal) 
-    document.getElementById('spanPontuacaoFinal').innerHTML = pontuacaoFinal
-
-    document.getElementById('jogo').classList.add("text-new-gray") 
-
-    btnProx.disabled = true
-    btnSubmeter.disabled = true
-    // btnConcluir.disabled = true
-    btnTentarNovamente.disabled = false
-}
+window.addEventListener('load', function(){ onloadEsconder(); carregarQuiz(); obterQuizPadrao(); });
 </script>
 </html>
-

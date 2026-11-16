@@ -49,6 +49,7 @@ function perguntaPertenceQuiz(idPergunta, idQuiz) {
 }
 
 
+// exportar todas as funções necessárias (evita sobrescrever exports acidentalmente)
 module.exports = {
     listarQuizzes,
     obterQuizPorId,
@@ -56,12 +57,5 @@ module.exports = {
     obterAlternativasPorPergunta,
     existeQuiz,
     existePergunta,
-    existeAlternativa
-};
-
-module.exports = {
-    listarQuizzes,
-    obterQuizPorId,
-    obterPerguntasPorQuiz,
-    obterAlternativasPorPergunta
+    existeAlternativa,
 };

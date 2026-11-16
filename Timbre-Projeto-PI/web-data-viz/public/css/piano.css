@@ -1,0 +1,574 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    width: 100%;
+    min-height: 100vh;
+}
+
+/*Tela Inicial*/
+
+.header {
+    background-color: black;
+    width: 100%;
+}
+
+.header .container{
+    width: 90%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    
+}
+
+.logo img{
+    width: 65px;
+    height: auto;
+}
+
+.titulo {
+    font-family: Garamond;
+    color: #FFC857;
+    font-size: 50px;
+}
+
+.navbar{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 25px;
+    font-family: Garamond;
+    font-size: 16px;
+    padding: 0;
+}
+
+.navbar li{
+    list-style: none;
+}
+
+.navbar li a{
+    color: aliceblue;
+    text-decoration: none;
+    list-style: none;
+}
+
+:root {
+    --bg: #101010;
+    --gold: #e9be68;
+    --gold-soft: #b9914d;
+    --white: #f5f1eb;
+    --muted: #aaa6a0;
+    --line: #383532;
+
+    --serif: "Playfair Display", Georgia, serif;
+    --sans: "Inter", Arial, sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: var(--sans);
+    line-height: 1.6;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Apresentação do piano */
+.hero {
+    min-height: 370px;
+    max-width: 1440px;
+    margin: auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 50px max(7%, calc((100% - 1240px) / 2));
+    overflow: hidden;
+}
+
+.hero-photo {
+    position: absolute;
+    inset: 0 0 0 36%;
+    background:
+        linear-gradient(
+            90deg,
+            var(--bg),
+            rgba(16, 16, 16, .68) 16%,
+            transparent 60%
+        ),
+        linear-gradient(
+            0deg,
+            rgba(16, 16, 16, .4),
+            transparent 35%
+        ),
+        url("https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?auto=format&fit=crop&w=1800&q=90")
+        center / cover no-repeat;
+    opacity: .88;
+}
+
+.hero-copy {
+    position: relative;
+    z-index: 1;
+    max-width: 440px;
+}
+
+.eyebrow {
+    font-size: 11px;
+    letter-spacing: 4px;
+    font-weight: 700;
+    color: var(--gold);
+}
+
+h1,
+h2,
+h3 {
+    font-family: var(--serif);
+    font-weight: 600;
+    line-height: 1.16;
+}
+
+.hero h1 {
+    font-size: clamp(54px, 7vw, 78px);
+    margin: 12px 0 8px;
+}
+
+.hero h1 span,
+h2 span {
+    color: var(--gold);
+}
+
+.hero-copy p {
+    font: 22px/1.35 var(--serif);
+    color: #d0cbc4;
+    max-width: 350px;
+}
+
+.gold-line {
+    display: block;
+    width: 74px;
+    height: 2px;
+    background: var(--gold);
+    margin-top: 24px;
+}
+
+/* Configuração padrão das seções */
+.section-wrap {
+    width: min(calc(100% - 96px), 1320px);
+    margin: 0 auto;
+}
+
+/* História do piano */
+.history {
+    display: grid;
+    grid-template-columns: minmax(280px, .85fr) 1.2fr;
+    gap: 42px;
+    align-items: center;
+    padding: 26px 0 42px;
+    border-bottom: 1px solid #292623;
+}
+
+.history-photo {
+    width: 100%;
+    height: 245px;
+    object-fit: cover;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    filter: sepia(.18) brightness(.82);
+}
+
+.history-copy h2,
+.facts h2,
+.types h2,
+.cta h2 {
+    font-size: 34px;
+    margin: 8px 0 12px;
+}
+
+.history-copy p,
+.facts-intro p,
+.types-intro p,
+.cta p {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+.outline-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid var(--gold-soft);
+    border-radius: 30px;
+    padding: 10px 22px;
+    color: var(--gold);
+    font-size: 13px;
+    margin-top: 20px;
+}
+
+.outline-button:hover {
+    background: rgba(233, 190, 104, .1);
+}
+
+/* Curiosidades */
+.facts {
+    display: grid;
+    grid-template-columns: 1.65fr repeat(3, 1fr);
+    gap: 22px;
+    align-items: stretch;
+    padding: 38px 0;
+    border-bottom: 1px solid #292623;
+}
+
+.facts-intro {
+    padding-right: 18px;
+}
+
+.facts h2 {
+    font-size: 36px;
+}
+
+.fact-card {
+    border: 1px solid var(--gold-soft);
+    border-radius: 15px;
+    padding: 20px 18px;
+    background: linear-gradient(145deg, #171512, #11100f);
+}
+
+.fact-icon {
+    font-size: 31px;
+    color: var(--gold);
+}
+
+.fact-card h3 {
+    font-size: 17px;
+    color: var(--gold);
+    margin: 8px 0;
+}
+
+.fact-card p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.55;
+}
+
+/* Tipos de piano */
+.types {
+    display: grid;
+    grid-template-columns: 1.8fr repeat(3, 1fr);
+    gap: 20px;
+    align-items: center;
+    padding: 40px 0;
+}
+
+.types-intro h2 {
+    font-size: 32px;
+}
+
+.type-card {
+    overflow: hidden;
+    border: 1px solid var(--gold-soft);
+    border-radius: 14px;
+    background: #171513;
+    min-width: 0;
+    height: 100%;
+}
+
+.type-card img {
+    width: 100%;
+    height: 142px;
+    display: block;
+    object-fit: cover;
+    filter: brightness(.85);
+}
+
+.type-card div {
+    padding: 12px 14px 16px;
+}
+
+.type-card h3 {
+    font-size: 17px;
+    color: var(--gold);
+    margin-bottom: 5px;
+}
+
+.type-card p {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.55;
+}
+
+/* Chamada final */
+.cta {
+    min-height: 180px;
+    border: 1px solid var(--gold-soft);
+    border-radius: 17px;
+    margin-top: 8px;
+    margin-bottom: 42px;
+    padding: 24px 34px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    overflow: hidden;
+    background:
+        radial-gradient(
+            ellipse at 15% 120%,
+            rgba(174, 119, 42, .17),
+            transparent 48%
+        ),
+        #12110f;
+}
+
+.staff-art {
+    font: 52px var(--serif);
+    letter-spacing: 8px;
+    color: rgba(233, 190, 104, .45);
+    transform: rotate(-8deg);
+    white-space: nowrap;
+}
+
+.cta h2 {
+    font-size: 29px;
+    margin: 5px 0;
+}
+
+.cta p {
+    font-size: 13px;
+}
+
+.gold-button {
+    display: inline-flex;
+    gap: 12px;
+    align-items: center;
+    background: var(--gold);
+    color: #17130d;
+    border-radius: 25px;
+    padding: 10px 22px;
+    font-weight: 700;
+    font-size: 13px;
+    margin-top: 14px;
+}
+
+/* Rodapé */
+.footer {
+    min-height: 82px;
+    border-top: 1px solid #292623;
+    padding: 18px max(48px, calc((100% - 1320px) / 2));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.footer p {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.footer i {
+    color: var(--gold);
+    font-style: normal;
+    margin: 0 8px;
+}
+
+/* Responsividade para tablets */
+@media (max-width: 900px) {
+
+    .facts {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .facts-intro,
+    .types-intro {
+        grid-column: 1 / -1;
+    }
+
+    .types {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .history {
+        gap: 26px;
+    }
+
+    .hero-photo {
+        left: 25%;
+    }
+}
+
+/* Responsividade para celulares */
+@media (max-width: 640px) {
+
+    .topbar {
+        width: calc(100% - 28px);
+        height: 66px;
+        margin-top: 8px;
+        padding: 0 16px;
+    }
+
+    .brand {
+        font-size: 22px;
+    }
+
+    .brand-icon {
+        font-size: 26px;
+    }
+
+    .menu-toggle {
+        display: block;
+        margin-left: auto;
+    }
+
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 66px;
+        left: 0;
+        right: 0;
+        margin: 0;
+        padding: 18px;
+        background: #171513;
+        border: 1px solid var(--line);
+        border-radius: 0 0 12px 12px;
+        flex-direction: column;
+        gap: 18px;
+        align-items: flex-start;
+    }
+
+    .nav-links.open {
+        display: flex;
+    }
+
+    .nav-links a.active {
+        height: auto;
+        border: 0;
+    }
+
+    .nav-actions {
+        margin-left: 18px;
+        gap: 12px;
+    }
+
+    .nav-icon {
+        font-size: 23px;
+    }
+
+    .hero {
+        min-height: 390px;
+        padding: 46px 26px;
+    }
+
+    .hero-photo {
+        inset: 0;
+        background:
+            linear-gradient(
+                90deg,
+                rgba(16, 16, 16, .94),
+                rgba(16, 16, 16, .55)
+            ),
+            url("https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?auto=format&fit=crop&w=1000&q=85")
+            center / cover;
+    }
+
+    .hero-copy p {
+        font-size: 20px;
+    }
+
+    .section-wrap {
+        width: calc(100% - 40px);
+    }
+
+    .history {
+        grid-template-columns: 1fr;
+        padding: 24px 0 32px;
+        gap: 22px;
+    }
+
+    .history-photo {
+        height: 220px;
+    }
+
+    .history-copy h2,
+    .facts h2,
+    .types h2 {
+        font-size: 29px;
+    }
+
+    .facts {
+        grid-template-columns: 1fr;
+        padding: 32px 0;
+        gap: 14px;
+    }
+
+    .facts-intro {
+        grid-column: auto;
+    }
+
+    .fact-card {
+        min-height: 130px;
+    }
+
+    .types {
+        grid-template-columns: 1fr 1fr;
+        padding: 32px 0;
+        gap: 14px;
+    }
+
+    .types-intro {
+        grid-column: 1 / -1;
+    }
+
+    .type-card img {
+        height: 125px;
+    }
+
+    .type-card h3 {
+        font-size: 15px;
+    }
+
+    .type-card p {
+        font-size: 11px;
+    }
+
+    .cta {
+        grid-template-columns: 1fr;
+        margin-bottom: 28px;
+        padding: 24px;
+        gap: 8px;
+    }
+
+    .staff-art {
+        font-size: 36px;
+    }
+
+    .cta h2 {
+        font-size: 26px;
+    }
+
+    .footer {
+        padding: 18px 20px;
+        gap: 12px;
+    }
+
+    .footer p {
+        font-size: 10px;
+    }
+}
