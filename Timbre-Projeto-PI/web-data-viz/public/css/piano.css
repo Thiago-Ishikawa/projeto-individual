@@ -121,7 +121,7 @@ a {
             rgba(16, 16, 16, .4),
             transparent 35%
         ),
-        url("https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?auto=format&fit=crop&w=1800&q=90")
+        url("../assets/imgs/piano_cauda1.png")
         center / cover no-repeat;
     opacity: .88;
 }
@@ -150,11 +150,13 @@ h3 {
 .hero h1 {
     font-size: clamp(54px, 7vw, 78px);
     margin: 12px 0 8px;
+    font-family: Garamond;
 }
 
 .hero h1 span,
 h2 span {
     color: var(--gold);
+    font-family: Garamond;
 }
 
 .hero-copy p {
@@ -217,7 +219,7 @@ h2 span {
     display: inline-flex;
     align-items: center;
     gap: 12px;
-    border: 1px solid var(--gold-soft);
+    border: 1px solid #FFC857;
     border-radius: 30px;
     padding: 10px 22px;
     color: var(--gold);
@@ -226,7 +228,7 @@ h2 span {
 }
 
 .outline-button:hover {
-    background: rgba(233, 190, 104, .1);
+    background: rgba(255, 200, 87);
 }
 
 /* Curiosidades */

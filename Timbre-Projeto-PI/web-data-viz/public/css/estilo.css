@@ -417,6 +417,22 @@ a {
     box-shadow: 0 2px 0;
 }
 
+.outline-button{
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid var(--gold-soft);
+    border-radius: 30px;
+    padding: 10px 22px;
+    color: #FFC857;
+    font-size: 13px;
+    margin-top: 20px;
+}
+
+.outline-button:hover {
+    background: rgba(233, 190, 104, .1);
+}
+
 .containerSimulador .conteudoSimulador2{
     display: flex;
     flex-direction: row;
