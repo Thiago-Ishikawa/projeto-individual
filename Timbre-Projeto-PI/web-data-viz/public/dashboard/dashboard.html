@@ -24,6 +24,61 @@
 
     <!--FONT AWESOME-->
     <script src="https://kit.fontawesome.com/9f7414eb10.js" crossorigin="anonymous"></script>
+    <style>
+        /* Minimal, stronger centralization to remove empty right space */
+        html, body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .janela {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto; /* center page */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+        }
+
+        /* Keep header content centered */
+        .header-left {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Main dash area centered and constrained to avoid right gap */
+        .dash {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 12px;
+        }
+
+        .btns-dash {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .tituloGraficos { text-align: center; width: 100%; }
+
+        .graph { display: flex; justify-content: center; width: 100%; }
+
+        .graph canvas { max-width: 100%; width: 800px; height: auto !important; }
+
+        #alerta, .label-captura { width: 100%; text-align: center; }
+    </style>
 </head>
 
 <!-- <body onload=" atualizarFeed()"> -->

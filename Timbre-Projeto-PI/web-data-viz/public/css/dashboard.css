@@ -40,6 +40,7 @@ body {
 .header {
     background-color: black;
     width: 100%;
+    height: 80px;
 }
 
 .header .container{
@@ -84,6 +85,7 @@ body {
 .navbar li a{
     color: aliceblue;
     text-decoration: none;
+    white-space: nowrap;
 }
 
 .dashboard-root{
@@ -159,8 +161,8 @@ body {
 }
 
 .period-filter select{
-    background: rgba(255,255,255,0.02);
-    color: #f0e9e2;
+    background: aliceblue;
+    color: #141414;
     border: 1px solid rgba(255,200,87,0.12);
     padding: 8px 12px;
     border-radius: 8px;

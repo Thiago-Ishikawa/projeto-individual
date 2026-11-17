@@ -6,9 +6,9 @@ router.get("/", function (req, res) {
     res.render("index");
 });
 
-// Serve exemplo de quiz armazenado em DOCUMENTOS_DE_APOIO para não alterar estrutura pública
+// Serve exemplo de quiz a partir da pasta pública 'public/exemplo_quiz'
 router.get('/exemplo_quiz', function (req, res) {
-    var file = path.join(__dirname, '..', '..', 'DOCUMENTOS_DE_APOIO', 'exemplo_de_quiz', 'quiz.html');
+    var file = path.join(__dirname, '..', '..', 'public', 'exemplo_quiz', 'quiz.html');
     res.sendFile(file);
 });
 

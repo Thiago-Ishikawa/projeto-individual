@@ -1,0 +1,40 @@
+{
+  "quiz": {
+    "id_quiz": 1,
+    "titulo": "Quiz Exemplo Timbre",
+    "descricao": "Quiz de demonstração para testar integração backend/frontend"
+  },
+  "perguntas": [
+    {
+      "id_pergunta": 1,
+      "numero": 1,
+      "texto": "Quem compôs a Nona Sinfonia?",
+      "tipo": "unica",
+      "alternativas": [
+        { "id_alternativa": 1, "texto": "Ludwig van Beethoven", "correta": 1 },
+        { "id_alternativa": 2, "texto": "Wolfgang Amadeus Mozart", "correta": 0 },
+        { "id_alternativa": 3, "texto": "Johann Sebastian Bach", "correta": 0 },
+        { "id_alternativa": 4, "texto": "Frédéric Chopin", "correta": 0 }
+      ]
+    },
+    {
+      "id_pergunta": 2,
+      "numero": 2,
+      "texto": "Quantas teclas tem um piano acústico padrão?",
+      "tipo": "unica",
+      "alternativas": [
+        { "id_alternativa": 5, "texto": "55", "correta": 0 },
+        { "id_alternativa": 6, "texto": "88", "correta": 1 },
+        { "id_alternativa": 7, "texto": "85", "correta": 0 },
+        { "id_alternativa": 8, "texto": "72", "correta": 0 }
+      ]
+    },
+    {
+      "id_pergunta": 3,
+      "numero": 3,
+      "texto": "Qual estilo musical você prefere?",
+      "tipo": "aberta",
+      "alternativas": []
+    }
+  ]
+}

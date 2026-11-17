@@ -7,8 +7,8 @@
     <title>Quiz Timbre</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* manter tamanho fixo do container da pergunta e do painel de pontuação */
-        #perguntaDaQuestaoAtual { min-height: 90px; max-height: 120px; overflow: auto; }
+        /* reduzir espaço entre pergunta e respostas */
+        #perguntaDaQuestaoAtual { min-height: 40px; max-height: 120px; overflow: auto; padding-bottom: 4px; }
         #jogo { min-width: 420px; }
         #pontuacao { min-width: 220px; min-height: 80px; }
         /* garantir que labels das alternativas não quebrem o layout */
@@ -87,6 +87,7 @@ let listaDeQuestoes = [
         id_pergunta: 1,
         pergunta: 'Quem compôs a Nona Sinfonia?',
         tipo: 'unica',
+        correta: 11,
         alternativas: [
             { id: 11, texto: 'Ludwig van Beethoven' },
             { id: 12, texto: 'Wolfgang Amadeus Mozart' },
@@ -98,6 +99,7 @@ let listaDeQuestoes = [
         id_pergunta: 2,
         pergunta: 'Quantas teclas tem um piano acústico padrão?',
         tipo: 'unica',
+        correta: 22,
         alternativas: [
             { id: 21, texto: '55' },
             { id: 22, texto: '88' },
@@ -109,6 +111,7 @@ let listaDeQuestoes = [
     id_pergunta: 3,
     pergunta: 'Qual é a função dos pedais de um piano?',
     tipo: 'unica',
+    correta: 32,
     alternativas: [
         { id: 31, texto: 'Alterar o volume das teclas' },
         { id: 32, texto: 'Modificar a sonoridade das notas' },
@@ -120,6 +123,7 @@ let listaDeQuestoes = [
         id_pergunta: 4,
         pergunta: 'Qual é o nome das teclas pretas do piano?',
         tipo: 'unica',
+        correta: 42,
         alternativas: [
             { id: 41, texto: 'Naturais' },
             { id: 42, texto: 'Sustenidos e bemóis' },
@@ -131,6 +135,7 @@ let listaDeQuestoes = [
         id_pergunta: 5,
         pergunta: 'Qual instrumento produz o som através de martelos que atingem cordas?',
         tipo: 'unica',
+        correta: 53,
         alternativas: [
             { id: 51, texto: 'Violino' },
             { id: 52, texto: 'Flauta' },
@@ -139,10 +144,11 @@ let listaDeQuestoes = [
         ]
     },
     {
-        id_pergunta: 6,
-        pergunta: 'Qual é a função do pedal sustain?',
-        tipo: 'unica',
-        alternativas: [
+    id_pergunta: 6,
+    pergunta: 'Qual é a função do pedal sustain?',
+    tipo: 'unica',
+    correta: 62,
+    alternativas: [
             { id: 61, texto: 'Aumentar a velocidade das notas' },
             { id: 62, texto: 'Manter as notas soando por mais tempo' },
             { id: 63, texto: 'Diminuir a afinação' },
@@ -150,10 +156,11 @@ let listaDeQuestoes = [
         ]
     },
     {
-        id_pergunta: 7,
-        pergunta: 'Qual é a primeira nota da sequência musical natural?',
-        tipo: 'unica',
-        alternativas: [
+    id_pergunta: 7,
+    pergunta: 'Qual é a primeira nota da sequência musical natural?',
+    tipo: 'unica',
+    correta: 73,
+    alternativas: [
             { id: 71, texto: 'Ré' },
             { id: 72, texto: 'Mi' },
             { id: 73, texto: 'Dó' },
@@ -161,10 +168,11 @@ let listaDeQuestoes = [
         ]
     },
     {
-        id_pergunta: 8,
-        pergunta: 'Qual compositor é conhecido por obras como Sonata ao Luar?',
-        tipo: 'unica',
-        alternativas: [
+    id_pergunta: 8,
+    pergunta: 'Qual compositor é conhecido por obras como Sonata ao Luar?',
+    tipo: 'unica',
+    correta: 82,
+    alternativas: [
             { id: 81, texto: 'Wolfgang Amadeus Mozart' },
             { id: 82, texto: 'Ludwig van Beethoven' },
             { id: 83, texto: 'Frédéric Chopin' },
@@ -172,10 +180,11 @@ let listaDeQuestoes = [
         ]
     },
     {
-        id_pergunta: 9,
-        pergunta: 'Como são chamadas as teclas brancas do piano?',
-        tipo: 'unica',
-        alternativas: [
+    id_pergunta: 9,
+    pergunta: 'Como são chamadas as teclas brancas do piano?',
+    tipo: 'unica',
+    correta: 91,
+    alternativas: [
             { id: 91, texto: 'Teclas naturais' },
             { id: 92, texto: 'Teclas cromáticas' },
             { id: 93, texto: 'Teclas harmônicas' },
@@ -210,7 +219,7 @@ function iniciar() {
     document.getElementById('btnIniciar').style.display = "none";
 
     var userId = sessionStorage.ID_USUARIO || sessionStorage.ID || 1;
-    fetch('/quiz/' + quizId + '/iniciar', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-user-id': userId }, body: JSON.stringify({}) })
+    fetch('/quiz/' + quizId + '/iniciar', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-user-id': userId }, body: JSON.stringify({ total_perguntas: quantidadeDeQuestoes }) })
         .then(function(r){
             if (!r.ok) return r.text().then(function(t){ throw new Error(t || 'Erro ao iniciar tentativa'); });
             // try parse json safely
@@ -289,12 +298,39 @@ function desmarcarRadioButtons(){ const options = document.getElementsByName('op
 function checarResposta(){
     const questaoAtual = listaDeQuestoes[numeroDaQuestaoAtual];
     const options = document.getElementsByName('option');
-    var corretaId = null; // we don't have correct flag client-side
     var chosen = null;
     for (let i=0;i<options.length;i++){ if (options[i].checked) chosen = options[i]; }
-    // basic local feedback: mark chosen as success (we'll rely on server for final scoring)
-    if (chosen){ document.getElementById(chosen.labels[0].id).classList.add('text-success-with-bg'); certas++; document.getElementById('spanCertas').innerHTML = certas; }
-    // não incrementamos aqui — o avanço é controlado pelo botão "Avançar" para evitar pular questões
+
+    if (!chosen) return; // nada selecionado (não deveria acontecer aqui)
+
+    const corretaId = String(questaoAtual.correta || '');
+    const escolhidaId = String(chosen.value || '');
+
+    // limpar qualquer cor anterior
+    limparCoresBackgroundOpcoes();
+
+    if (escolhidaId === corretaId) {
+        // acerto
+        document.getElementById(chosen.labels[0].id).classList.add('text-success-with-bg');
+        certas++;
+        document.getElementById('spanCertas').innerHTML = certas;
+    } else {
+        // erro: marcar escolhida como errada e também marcar a correta como destaque
+        document.getElementById(chosen.labels[0].id).classList.add('text-danger-with-bg');
+        erradas++;
+        document.getElementById('spanErradas').innerHTML = erradas;
+        // marcar a alternativa correta para feedback
+        if (corretaId) {
+            const labels = ['labelOpcaoUm','labelOpcaoDois','labelOpcaoTres','labelOpcaoQuatro'];
+            for (let i=0;i<labels.length;i++){
+                const lab = document.getElementById(labels[i]);
+                if (lab && String(lab.dataset.altId) === corretaId) {
+                    lab.classList.add('text-success-with-bg');
+                    break;
+                }
+            }
+        }
+    }
 }
 
 function limparCoresBackgroundOpcoes(){ const options = document.getElementsByName('option'); for (let i=0;i<options.length;i++){ if (options[i].labels && options[i].labels[0]){ document.getElementById(options[i].labels[0].id).classList.remove('text-danger-with-bg'); document.getElementById(options[i].labels[0].id).classList.remove('text-success-with-bg'); } } }

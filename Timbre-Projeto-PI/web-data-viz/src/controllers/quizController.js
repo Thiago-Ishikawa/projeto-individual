@@ -36,7 +36,11 @@ function iniciar(req, res) {
     var fk_usuario = req.body.fk_usuario || req.headers['x-user-id'] || req.body.ID_USUARIO || req.body.idUsuario || null;
     if (!fk_usuario) return res.status(400).send('fk_usuario é obrigatório');
 
-    tentativaModel.iniciarTentativa(fk_usuario, fk_quiz).then(function (resultado) {
+    // espera total_perguntas no body (front envia a quantidade de perguntas do quiz)
+    var total_perguntas = req.body.total_perguntas || req.body.totalPerguntas || null;
+    if (!total_perguntas) return res.status(400).send('total_perguntas é obrigatório');
+
+    tentativaModel.iniciarTentativa(fk_usuario, total_perguntas).then(function (resultado) {
         res.json({ id_tentativa: resultado.insertId });
     }).catch(function (erro) {
         console.log(erro);
@@ -46,59 +50,41 @@ function iniciar(req, res) {
 
 function responder(req, res) {
     var id_tentativa = req.params.id;
-    var fk_pergunta = req.body.fk_pergunta;
-    var fk_alternativa = req.body.fk_alternativa || null;
-    var resposta_texto = req.body.resposta_texto || null;
-    var correta = req.body.correta || null;
+    // agora trabalhamos com numero_pergunta e resposta_usuario
+    // aceitar tanto os nomes antigos (fk_pergunta, fk_alternativa) quanto os novos
+    var numero_pergunta = req.body.numero_pergunta || req.body.numeroPergunta || req.body.fk_pergunta || null;
+    var resposta_usuario = req.body.resposta_usuario || req.body.resposta || null;
+    var fk_alternativa = (typeof req.body.fk_alternativa !== 'undefined') ? req.body.fk_alternativa : null;
+    var correta = (typeof req.body.correta !== 'undefined') ? req.body.correta : null;
 
-    if (!fk_pergunta) return res.status(400).send('fk_pergunta é obrigatório');
+    if (!numero_pergunta) return res.status(400).send('numero_pergunta é obrigatório');
 
-    // validações: tentativa existe e não está concluída; pergunta e alternativa existem
+    // validações simples: tentativa existe e não está concluída; evita duplicidade de resposta
     tentativaModel.obterTentativa(id_tentativa).then(function (trows) {
         if (!trows || trows.length === 0) return res.status(404).send('Tentativa não encontrada');
         var tent = trows[0];
-        if (tent.estado === 'concluida') return res.status(400).send('Tentativa já concluída');
+        if (tent.estado === 'CONCLUIDA' || tent.estado === 'concluida') return res.status(400).send('Tentativa já concluída');
 
-        // validar pergunta
-        quizModel.existePergunta(fk_pergunta).then(function (prows) {
-            if (!prows || prows.length === 0) return res.status(404).send('Pergunta não encontrada');
-
-            if (fk_alternativa !== null) {
-                quizModel.existeAlternativa(fk_alternativa).then(function (arows) {
-                    if (!arows || arows.length === 0) return res.status(404).send('Alternativa não encontrada');
-                    // evitar duplicidade de resposta para mesma pergunta na mesma tentativa
-                    tentativaModel.existeResposta(id_tentativa, fk_pergunta).then(function (resEx) {
-                        if (resEx && resEx.length > 0) return res.status(400).send('Resposta para esta pergunta já registrada');
-                        // gravar resposta
-                        tentativaModel.gravarResposta(id_tentativa, fk_pergunta, fk_alternativa, resposta_texto, correta).then(function (resultado) {
-                            res.json(resultado);
-                        }).catch(function (erro) {
-                            console.log(erro);
-                            res.status(500).json(erro.sqlMessage);
-                        });
-                    }).catch(function (erro) {
-                        console.log(erro);
-                        res.status(500).json(erro.sqlMessage);
-                    });
-                }).catch(function (erro) {
-                    console.log(erro);
-                    res.status(500).json(erro.sqlMessage);
-                });
-            } else {
-                // resposta aberta
-                tentativaModel.existeResposta(id_tentativa, fk_pergunta).then(function (resEx) {
-                    if (resEx && resEx.length > 0) return res.status(400).send('Resposta para esta pergunta já registrada');
-                    tentativaModel.gravarResposta(id_tentativa, fk_pergunta, null, resposta_texto, correta).then(function (resultado) {
-                        res.json(resultado);
-                    }).catch(function (erro) {
-                        console.log(erro);
-                        res.status(500).json(erro.sqlMessage);
-                    });
-                }).catch(function (erro) {
-                    console.log(erro);
-                    res.status(500).json(erro.sqlMessage);
-                });
-            }
+        // se veio fk_alternativa (front antigo), tratar como resposta_usuario e tentar inferir 'correta'
+        (fk_alternativa !== null ? Promise.resolve().then(function(){
+            resposta_usuario = fk_alternativa;
+            // se não foi informado correta, tentar obter do quiz estático
+            if (correta === null) return quizModel.existeAlternativa(fk_alternativa).then(function(arows){
+                if (arows && arows.length>0) correta = arows[0].correta;
+                return;
+            });
+            return;
+        }) : Promise.resolve()).then(function(){
+            return tentativaModel.existeResposta(id_tentativa, numero_pergunta);
+        }).then(function (resEx) {
+            if (resEx && resEx.length > 0) return res.status(400).send('Resposta para esta pergunta já registrada');
+            // gravar resposta
+            tentativaModel.gravarResposta(id_tentativa, numero_pergunta, resposta_usuario, correta).then(function (resultado) {
+                res.json(resultado);
+            }).catch(function (erro) {
+                console.log(erro);
+                res.status(500).json(erro.sqlMessage);
+            });
         }).catch(function (erro) {
             console.log(erro);
             res.status(500).json(erro.sqlMessage);
