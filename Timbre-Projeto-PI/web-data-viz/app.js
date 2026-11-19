@@ -23,6 +23,7 @@ var aquariosRouter = require("./src/routes/aquarios");
 var empresasRouter = require("./src/routes/empresas");
 var quizRouter = require("./src/routes/quiz");
 var dashboardRouter = require("./src/routes/dashboard");
+var preferenciasRouter = require("./src/routes/preferencias");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -38,24 +39,35 @@ app.use("/aquarios", aquariosRouter);
 app.use("/empresas", empresasRouter);
 app.use("/quiz", quizRouter);
 app.use("/dash", dashboardRouter);
+app.use("/preferencias", preferenciasRouter);
 
-app.listen(PORTA_APP, function () {
-    console.log(`
-    ##   ##  ######   #####             ####       ##     ######     ##              ##  ##    ####    ######  
-    ##   ##  ##       ##  ##            ## ##     ####      ##      ####             ##  ##     ##         ##  
-    ##   ##  ##       ##  ##            ##  ##   ##  ##     ##     ##  ##            ##  ##     ##        ##   
-    ## # ##  ####     #####    ######   ##  ##   ######     ##     ######   ######   ##  ##     ##       ##    
-    #######  ##       ##  ##            ##  ##   ##  ##     ##     ##  ##            ##  ##     ##      ##     
-    ### ###  ##       ##  ##            ## ##    ##  ##     ##     ##  ##             ####      ##     ##      
-    ##   ##  ######   #####             ####     ##  ##     ##     ##  ##              ##      ####    ######  
-    \n\n\n                                                                                                 
-    Servidor do seu site já está rodando! Acesse o caminho a seguir para visualizar .: http://${HOST_APP}:${PORTA_APP} :. \n\n
-    Você está rodando sua aplicação em ambiente de .:${process.env.AMBIENTE_PROCESSO}:. \n\n
-    \tSe .:desenvolvimento:. você está se conectando ao banco local. \n
-    \tSe .:producao:. você está se conectando ao banco remoto. \n\n
-    \t\tPara alterar o ambiente, comente ou descomente as linhas 1 ou 2 no arquivo 'app.js'\n\n`);
-});
+// Não use app.listen quando também criamos um server HTTP e chamamos server.listen
+// Isso evita erro EADDRINUSE por tentativa de escutar a mesma porta duas vezes.
 
 const pianoRoutes = require("./src/routes/pianoRoutes");
-
 app.use("/piano", pianoRoutes);
+
+// criar server HTTP usando o mesmo `app`
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require('socket.io');
+const io = new Server(server);
+
+// expor io para controllers
+app.set('io', io);
+
+// iniciar o servidor (substitui app.listen)
+const PORT = process.env.APP_PORT || process.env.PORT || 3000;
+server.listen(PORT, function () {
+  console.log(`
+##   ##  ######   #####             ####       ##     ######     ##              ##  ##    ####    ######  
+##   ##  ##       ##  ##            ## ##     ####      ##      ####             ##  ##     ##         ##  
+##   ##  ##       ##  ##            ##  ##   ##  ##     ##     ##  ##            ##  ##     ##        ##   
+## # ##  ####     #####    ######   ##  ##   ######     ##     ######   ######   ##  ##     ##       ##    
+#######  ##       ##  ##            ##  ##   ##  ##     ##     ##  ##            ##  ##     ##      ##     
+### ###  ##       ##  ##            ## ##    ##  ##     ##     ##  ##             ####      ##     ##      
+##   ##  ######   #####             ####     ##  ##     ##     ##  ##              ##      ####    ######  
+
+Servidor rodando em http://${process.env.APP_HOST || 'localhost'}:${PORT}
+`);
+});

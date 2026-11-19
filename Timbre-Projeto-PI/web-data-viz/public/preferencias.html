@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=7">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preferências | Timbre</title>
+    <script src="./js/sessao.js"></script>
+    <link rel="stylesheet" href="./css/preferencias.css">
+    <link rel="icon" href="./assets/icon/favicon2.ico">
+</head>
+<body>
+
+    <div class="header">
+        <div class="container">
+            <div class="logo">
+                <h1 class="titulo">Timbre</h1>
+            </div>
+            <ul class="navbar">
+
+            <li>
+                <a href="index.html">Inicial</a>
+            </li>
+            <li>
+                <a>|</a>
+            </li>
+            <li>
+                <a href="simulador.html">Sobre o Timbre</a>
+            </li>
+            <li>
+                <a>|</a>
+            </li>
+            <li>
+                <a href="dashboard.html">Dashboard</a>
+            </li>
+            <li>
+                <a>|</a>
+            </li>
+            <li>
+                <a href="cadastro.html">Cadastro</a>
+            </li>
+            <li>
+                <a>|</a>
+            </li>
+            <li>
+                <a href="login.html">Login</a>
+            </li>
+            <li>
+                <a>|</a>
+            </li>
+            </ul>
+        </div>
+    </div>
+
+<div class="bannerPreferencia">
+    <main style="padding:24px; max-width:900px; margin:24px auto;">
+        <h2>Preferências</h2>
+        <p>Selecione seus gêneros favoritos abaixo. As preferências serão salvas para a sua conta.</p>
+
+        <div id="mensagem" style="margin:12px 0; color: #222;"></div>
+
+        <form id="form-preferencias">
+            <div id="lista-preferencias">
+                <div class="question-block" id="question-genres">
+                    <h3>1) Gêneros Musicais</h3>
+                    <div id="genres-list"></div>
+                </div>
+
+                <div class="question-block" id="question-composer">
+                    <h3>2) Compositor favorito</h3>
+                    <div id="composer-list"></div>
+                </div>
+
+                <div class="question-block" id="question-frequency">
+                    <h3>3) Com que frequência você costuma escutar música?</h3>
+                    <div id="frequency-list"></div>
+                </div>
+            </div>
+            <br>
+            <button type="submit">Salvar Preferências</button>
+        </form>
+    </main>
+</div>
+
+    <script>
+        (function(){
+            const userId = sessionStorage.ID_USUARIO || null;
+            const genresList = document.getElementById('genres-list');
+            const composerList = document.getElementById('composer-list');
+            const freqList = document.getElementById('frequency-list');
+            const msg = document.getElementById('mensagem');
+
+            function showMessage(text, ok){ msg.innerText = text; msg.style.color = ok ? 'green' : 'crimson'; }
+
+            const knownGenres = ['Clássica','Romântica','Barroca','Contemporânea'];
+            const knownComposers = ['Frédéric Chopin','Wolfgang Amadeus Mozart','Johann Sebastian Bach','Claude Debussy','Franz Liszt','Outro'];
+
+            function normalize(s){ return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,''); }
+
+            fetch('/preferencias').then(r => { if(!r.ok) throw new Error('no prefs'); return r.json(); }).then(function(opts){
+                if(!Array.isArray(opts)) opts = [];
+                const map = {};
+                opts.forEach(function(p){ map[normalize(p.nome||'')] = p.id_preferencia || p.id || 0; });
+
+                knownGenres.forEach(function(g){
+                    const id = map[normalize(g)];
+                    const lab = document.createElement('label');
+                    lab.innerHTML = `<input type="checkbox" value="${id||''}"> ${g}`;
+                    genresList.appendChild(lab);
+                });
+
+                knownComposers.forEach(function(c){
+                    const id = map[normalize(c)];
+                    const lab = document.createElement('label');
+                    lab.innerHTML = `<input type="radio" name="composer_fav" value="${id||''}"> ${c}`;
+                    composerList.appendChild(lab);
+                });
+
+                const freqs = ['Diariamente','Semanalmente','Mensalmente','Raramente'];
+                freqs.forEach(function(f){
+                    const lab = document.createElement('label');
+                    lab.innerHTML = `<input type="radio" name="frequency" value="${f}"> ${f}`;
+                    freqList.appendChild(lab);
+                });
+
+                if(userId){
+                    fetch(`/preferencias/usuario/${userId}`).then(r=>{ if(!r.ok) throw new Error('no user prefs'); return r.json(); }).then(function(userPrefs){
+                        const selected = (Array.isArray(userPrefs) ? userPrefs.map(x=> x.id_preferencia || x.fk_preferencia || x.id) : []);
+                        selected.forEach(function(id){
+                            const input = document.querySelector(`input[value="${id}"]`);
+                            if(input) input.checked = true;
+                        });
+                    }).catch(function(){});
+                }
+
+                try{ const fsel = localStorage.getItem('pref_frequency'); if(fsel){ const rf = document.querySelector(`input[name="frequency"][value="${fsel}"]`); if(rf) rf.checked = true; } }catch(e){}
+            }).catch(function(){ genresList.innerHTML = '<div style="color:#c33">Não foi possível carregar opções de preferência do servidor.</div>'; composerList.innerHTML = ''; freqList.innerHTML = ''; });
+
+            document.getElementById('form-preferencias').addEventListener('submit', function(ev){
+                ev.preventDefault();
+                if(!userId){ showMessage('Faça login para salvar preferências.', false); return; }
+                const checkedGenres = Array.from(document.querySelectorAll('#genres-list input[type=checkbox]:checked')).map(cb=> Number(cb.value)).filter(n=> Number.isFinite(n) && n>0);
+                const composerSel = document.querySelector('#composer-list input[type=radio]:checked');
+                const composerId = composerSel ? Number(composerSel.value) : null;
+                const prefs = checkedGenres.slice();
+                if(composerId && Number.isFinite(composerId) && composerId>0) prefs.push(composerId);
+                const freqSel = document.querySelector('#frequency-list input[type=radio]:checked');
+                if(freqSel) try{ localStorage.setItem('pref_frequency', freqSel.value); }catch(e){}
+
+                fetch(`/preferencias/usuario/${userId}`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ preferencias: prefs }) }).then(function(r){
+                    if(!r.ok) return r.text().then(t=> { throw new Error(t || 'erro') });
+                    return r.json().catch(()=> ({}));
+                }).then(function(){ showMessage('Preferências salvas com sucesso.', true); }).catch(function(err){ showMessage('Erro ao salvar preferências: ' + (err.message||err), false); });
+            });
+        })();
+    </script>
+
+</body>
+</html>

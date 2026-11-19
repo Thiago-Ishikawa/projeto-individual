@@ -1,0 +1,133 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    width: 100%;
+    min-height: 100vh;
+    display:flex;
+    flex-direction: column;
+}
+
+/*Tela Inicial*/
+
+.header {
+    background-color: black;
+    width: 100%;
+    height: 80px;
+}
+
+.header .container{
+    width: 90%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    
+}
+
+.logo img{
+    width: 65px;
+    height: auto;
+}
+
+.titulo {
+    font-family: Garamond;
+    color: #FFC857;
+    font-size: 50px;
+}
+
+.navbar{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 25px;
+    font-family: Garamond;
+    font-size: 16px;
+    padding: 0;
+}
+
+.navbar li a{
+    color: aliceblue;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+button {
+    background-color: #FFC857;
+    font-family: Garamond;
+    font-weight: bold;
+    height: 40px;
+    width: 180px;
+    border-radius: 16px;
+    margin-left: 15%;
+    border-color: #FFC857;
+}
+
+button:hover{
+    transform: translateY(2px);
+    box-shadow: 0 2px 0;
+}
+
+.bannerPreferencia {
+    flex: 1;
+    background-image: url("../assets/imgs/Piano-cauda-sob-luz-dourada.png");
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bannerPreferencia h2{
+    color: aliceblue;
+}
+
+.bannerPreferencia p{
+    color: aliceblue;
+}
+
+.form-preferencias .lista-preferencias{
+    color: aliceblue;
+}
+
+#lista-preferencias label,
+#lista-compositores label,
+#lista-gerais label,
+#genres-list label,
+#composer-list label,
+#frequency-list label {
+    color: aliceblue;
+}
+
+/* títulos das questões */
+.question-block h3 { color: aliceblue; margin: 0 0 10px 0; }
+
+/* empilhar inputs (um por linha) e espaçamento entre itens */
+#genres-list label,
+#composer-list label,
+#frequency-list label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+#genres-list label input,
+#composer-list label input,
+#frequency-list label input {
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+/* espaço entre uma questão e outra */
+.question-block { margin-bottom: 22px; }

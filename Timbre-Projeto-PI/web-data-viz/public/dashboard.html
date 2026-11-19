@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <script src="./js/sessao.js"></script>
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./css/dashboard.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/dashboard.js" defer></script>
@@ -16,38 +18,20 @@
 
     <div class="header">
     <div class="container">
-        <div class="logo">
-            <h1 class="titulo">Timbre</h1>
-            <img src="assets/imgs/logo-timbre.png">
-        </div>
+            <div class="logo">
+                <h1 class="titulo">Timbre</h1>
+                <img src="assets/imgs/logo-timbre.png">
+            </div>
             <ul class="navbar">
-            <li class="agora">
-                <a href="index.html">Inicial</a>
-            </li>
-            <li>
-                <a>|</a>
-            </li>
-            <li>
-                <a href="simulador.html">Sobre o Timbre</a>
-            </li>
-            <li>
-                <a>|</a>
-            </li>
-            <li>
-                <a href="dashboard.html">Dashboard</a>
-            </li>
-            <li>
-                <a>|</a>
-            </li>
-            <li>
-                <a href="cadastro.html">Cadastro</a>
-            </li>
-            <li>
-                <a>|</a>
-            </li>
-            <li>
-                <a href="login.html">Login</a>
-            </li>
+                <li class="agora"><a href="index.html">Inicial</a></li>
+                <li class="separator"><span>|</span></li>
+                <li><a href="simulador.html">Sobre o Timbre</a></li>
+                <li class="separator"><span>|</span></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li class="separator"><span>|</span></li>
+                <li><a href="cadastro.html">Cadastro</a></li>
+                <li class="separator"><span>|</span></li>
+                <li><a href="login.html">Login</a></li>
             </ul>
     </div>
 </div>
@@ -77,25 +61,25 @@
             <div class="kpi"> 
                 <div class="kpi-inner">
                     <div class="kpi-title">Total de Usuários</div>
-                    <div class="kpi-value">1.250</div>
+                    <div class="kpi-value" id="kpi-total-usuarios"></div>
                 </div>
             </div>
             <div class="kpi"> 
                 <div class="kpi-inner">
                     <div class="kpi-title">Músicas Mais Acessadas</div>
-                    <div class="kpi-value">Clair de Lune</div>
+                    <div class="kpi-value"></div>
                 </div>
             </div>
             <div class="kpi"> 
                 <div class="kpi-inner">
                     <div class="kpi-title">Compositor Favorito</div>
-                    <div class="kpi-value">Chopin</div>
+                    <div class="kpi-value" id="kpi-compositor-favorito"></div>
                 </div>
             </div>
             <div class="kpi"> 
                 <div class="kpi-inner">
                     <div class="kpi-title">Média de Acertos</div>
-                    <div class="kpi-value">78%</div>
+                    <div class="kpi-value" id="kpi-media-acertos"></div>
                 </div>
             </div>
         </section>
@@ -103,71 +87,129 @@
         <section class="charts-grid">
             <div class="card">
                 <h3>Estilos Musicais</h3>
+                <div id="kpi-estilo-preferido" style="margin-bottom:8px; text-align:center; color:#FFC857"></div>
                 <canvas id="myChart1"></canvas>
             </div>
             <div class="card">
                 <h3>Engajamento</h3>
                 <canvas id="myChart2"></canvas>
             </div>
-            <div class="card">
-                <h3>Top Compositores</h3>
-                <div class="top-list">
-                    <div>1. Chopin <span>28%</span></div>
-                    <div>2. Beethoven <span>24%</span></div>
-                    <div>3. Mozart <span>20%</span></div>
-                    <div>4. Johann Pachelbel <span>10%</span></div>
-                    <div>5. Tchaikovsky <span>18%</span></div>
-                </div>
-            </div>
         </section>
     </main>
 
 </body>
+<script src="/socket.io/socket.io.js"></script>
 <script>
-    const labels = [
-        '0','100','200','300','400','500','600','700','800','900','1000'
-    ];
-
-    const labels2 = [
-        'Semana1',
-        'Semana2',
-        'Semana3',
-        'Semana4',
-        'Semana5',
-    ];
-
-    const labels3 = [
-        'Clássica',
-        'Romântica',
-        'Barroca',
-        'Contemporânea',
-        'Outros',
-    ];
-
-    const data = {
-        labels: labels3,
-        datasets: [{
-            label: 'Estilos Musicais',
-            data: [42, 32, 16, 10, 0],
-            backgroundColor: [
-                '#FFC857','#D4A373','#6A9FB5','#3B3B3B','#8D8D8D'
-            ],
-            hoverOffset: 6
-        }]
+    const normalizeText = function(value){
+        return String(value || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,'');
     };
+    const labels = [ '0','100','200','300','400','500','600','700','800','900','1000' ];
 
-    const data2 = {
-        labels: labels2,
-        datasets: [{
-            label: 'Engajamento',
-            data: [500, 650, 600, 900],
-            backgroundColor: 'transparent',
-            borderColor: '#FFC857',
-            pointBackgroundColor: '#FFC857',
-            tension: 0.3
-        }]
-    };
+    const labels2 = [ 'Semana1','Semana2','Semana3','Semana4','Semana5' ];
 
+    const genres = [
+    {
+        name: 'Clássica',
+        colors: '#FFC247',
+        synonyms: [
+            'classica', 'classico', 'classical',
+            'classical music', 'musica classica',
+            'musicas classicas'
+        ]
+    },
+    {
+        name: 'Romântica',
+        colors: '#F07878',
+        synonyms: [
+            'romantica', 'romantico', 'romantic',
+            'romantic era', 'musica romantica'
+        ]
+    },
+    {
+        name: 'Barroca',
+        colors: '#36B4CC',
+        synonyms: [
+            'barroca', 'barroco', 'baroque',
+            'musica barroca', 'musicas barrocas',
+            'periodo barroco', 'periodo barocco'
+        ]
+    },
+    {
+        name: 'Contemporânea',
+        colors: '#9674E8',
+        synonyms: [
+            'contemporanea', 'contemporaneo',
+            'contemporary', 'musica contemporanea',
+            'musicas contemporaneas',
+            'periodo contemporaneo',
+            'musica moderna', 'moderna'
+        ]
+    },
+    {
+        name: 'Outros',
+        colors: '#9E9E9E',
+        synonyms: [
+            'outros', 'outro', 'others',
+            'varios', 'various', 'misc', 'diversos'
+        ]
+    }
+];
+    const composerKeywords = /compositor|composer/;
+    const composerNameCandidates = [
+        'Ludwig van Beethoven',
+        'Frédéric Chopin',
+        'Wolfgang Amadeus Mozart',
+        'Johann Sebastian Bach',
+        'Claude Debussy',
+        'Franz Liszt',
+        'Johann Pachelbel',
+        'Tchaikovsky'
+    ].map(function(name){
+        var normalized = normalizeText(name);
+        return { normalized: normalized, noSpace: normalized.replace(/\s+/g,'') };
+    });
+
+    Chart.defaults.font.family = 'Space Grotesk, "Source Sans 3", sans-serif';
+    Chart.defaults.color ='#F0F8FF';
+    Chart.defaults.plugins.legend.labels.color = '#F0F8FF';
+    const data = { labels: [], datasets: [{ label: 'Estilos Musicais', data: [], backgroundColor: genres.map(g=>g.colors), hoverOffset: 6 }] };
+
+    const data2 = { labels: labels2, datasets: [{ label: 'Engajamento', data: [500, 650, 600, 900], backgroundColor: 'transparent', borderColor: '#FFC857', pointBackgroundColor: '#FFC857', tension: 0.3 }] };
+
+    function findComposerCandidates(items){
+        if(!Array.isArray(items)) return [];
+        var normalizedItems = items.map(function(item){
+            var base = normalizeText((item.nome || '') + ' ' + (item.descricao || ''));
+            var noSpace = base.replace(/\s+/g,'');
+            return { original: item, normalized: base, noSpace: noSpace };
+        });
+        return normalizedItems.filter(function(wrapper){
+            var text = wrapper.normalized || '';
+            if(!text) return false;
+            if(composerKeywords.test(text)) return true;
+            return composerNameCandidates.some(function(candidate){
+                var nameMatched = candidate.normalized && candidate.normalized.length && text.indexOf(candidate.normalized) !== -1;
+                var compactMatched = candidate.noSpace && candidate.noSpace.length && wrapper.noSpace.indexOf(candidate.noSpace) !== -1;
+                return nameMatched || compactMatched;
+            });
+        }).map(function(wrapper){ return wrapper.original; });
+    }
+
+    function updateComposerKPI(items){
+        var kpiEl = document.getElementById('kpi-compositor-favorito');
+        if(!kpiEl) return;
+        var candidates = findComposerCandidates(items || []);
+        if(candidates.length === 0){
+            kpiEl.textContent = 'Nenhuma preferência por compositores';
+            return;
+        }
+        candidates.sort(function(a,b){ return (Number(b.total)||0) - (Number(a.total)||0); });
+        var totalSum = candidates.reduce(function(sum, item){ return sum + (Number(item.total)||0); }, 0) || 0;
+        var best = candidates[0];
+        var pct = totalSum > 0 ? Math.round((Number(best.total)||0) / totalSum * 100) : 0;
+        var label = best.nome || best.descricao || 'Compositor prioritário';
+        kpiEl.textContent = label + ' (' + pct + '%)';
+    }
 
 const config = {
     type: 'doughnut',
@@ -175,57 +217,226 @@ const config = {
     options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { position: 'right', labels: { color: '#fff' } } }
+        plugins: {
+            legend: {
+                display: true,
+                position: 'right',
+                labels: {
+                    color: '#FFFFFF',
+                    font: {
+                        size: 14,
+                        weight: '500'
+                    },
+                    boxWidth: 15,
+                    padding: 12
+                }
+            }
+        }
     }
 };
 
-const config2 = {
-  type: 'line',
-  data: data2,
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      x: { ticks: { color: '#ddd' } },
-      y: { ticks: { color: '#ddd' } }
-    },
-    plugins: { legend: { display: false } }
-  }
-};
+const config2 = { type: 'line', data: data2, options: { responsive: true, maintainAspectRatio: false, scales: { x: { ticks: { color: '#ddd' } }, y: { ticks: { color: '#ddd' } } }, plugins: { legend: { display: false } } } };
+
+    const myChart1 = new Chart(document.getElementById("myChart1"), config);
+
+    // carregar e atualizar dados de estilos musicais; exposto para uso por socket
+    window.loadGenreStats = function(){
+        fetch('/dash/preferencias').then(function(r){ if(!r.ok) throw new Error('no prefs'); return r.json(); }).then(function(resp){
+            // resp pode ser o array antigo ou o objeto { items, totalUsuarios }
+            var items = Array.isArray(resp) ? resp : (resp && resp.items ? resp.items : []);
+            console.table(items);
+            var totalUsuarios = (!Array.isArray(resp) && resp && typeof resp.totalUsuarios !== 'undefined') ? Number(resp.totalUsuarios) : 0;
+            // somar preferências por gênero usando sinônimos e variações
+            var sums = genres.map(function(){ return 0; });
+            var matchedNames = genres.map(function(){ return []; });
+            items.forEach(function(it){
+
+    var n = normalizeText((it.nome || '') + ' ' + (it.descricao || ''));
+    var nNoSpace = n.replace(/\s+/g,'');
+
+    var matched = false;
+
+    // Identificar as quatro categorias principais
+    for(var i = 0; i < genres.length - 1; i++){
+
+        var syns = genres[i].synonyms || [];
+
+        for(var j = 0; j < syns.length; j++){
+
+            var syn = normalizeText(syns[j]);
+
+            if(n.indexOf(syn) !== -1){
+
+                sums[i] += Number(it.total) || 0;
+
+                matchedNames[i].push(it.nome || it.descricao);
+
+                matched = true;
+                break;
+            }
+        }
+
+        if(matched) break;
+    }
+
+        // Se não identificar nenhuma categoria, contabilizar em Outros
+            if(!matched){
+
+                var lastIndex = genres.length - 1;
+
+                sums[lastIndex] += Number(it.total) || 0;
+
+                matchedNames[lastIndex].push(it.nome || it.descricao);
+            }
+
+        });
+            var counts = sums;
+            // converter para porcentagens relativas ao total de usuários que completaram o teste
+            var percentValues = counts.map(function(c){ return (totalUsuarios > 0 ? (Number(c)||0) / totalUsuarios * 100 : 0); });
+            var displayValues = percentValues.map(function(v){ return Math.round(v); });
+            myChart1.data.labels = genres.map(function(g){ return g.name; });
+            // use raw counts for slice sizes; keep counts and totalUsuarios available for legend generation
+            myChart1.data.datasets[0].data = counts;
+            myChart1.data.datasets[0].metaCounts = counts;
+            myChart1.data.datasets[0].totalUsuarios = totalUsuarios;
+            myChart1.update();
+
+            // atualizar detalhamento de quais preferências foram mapeadas para cada gênero (exibir contagens)
+            var detailEl = document.getElementById('genre-detail-list');
+            if(detailEl){
+                detailEl.innerHTML = '';
+                genres.forEach(function(g, idx){
+                    var names = matchedNames[idx] || [];
+                    var div = document.createElement('div');
+                    var title = document.createElement('div');
+                    title.style.color = '#EDE3DA';
+                    title.style.fontWeight = '600';
+                    title.textContent = g.name + ' (' + (counts[idx]||0) + ')';
+                    div.appendChild(title);
+                    if(names.length > 0){
+                        var ul = document.createElement('ul');
+                        ul.style.margin = '6px 0 12px 18px';
+                        names.forEach(function(nm){ var li = document.createElement('li'); li.textContent = nm; ul.appendChild(li); });
+                        div.appendChild(ul);
+                    }
+                    detailEl.appendChild(div);
+                });
+            }
+
+            // atualizar KPI do estilo preferido (percentual relativo ao total de usuários)
+            var kpiEl = document.getElementById('kpi-estilo-preferido');
+            if(kpiEl){
+                var meta = myChart1 && myChart1.getDatasetMeta ? myChart1.getDatasetMeta(0) : null;
+                var visible = counts.map(function(_, i){ var el = (meta && meta.data && meta.data[i]) ? meta.data[i] : null; return !(el && el.hidden === true); });
+
+                // escolher o máximo apenas entre itens visíveis
+                var maxIndex = -1;
+                for(var j=0;j<counts.length;j++){
+                    if(!visible[j]) continue;
+                    if(maxIndex === -1 || Number(counts[j]) > Number(counts[maxIndex])) maxIndex = j;
+                }
+
+                if(maxIndex === -1){
+                    kpiEl.textContent = 'Nenhum dado de estilo';
+                } else {
+                    if(!totalUsuarios){
+                        var total = counts.reduce(function(s,v){ return s + (Number(v)||0); }, 0) || 0;
+                        var pct = total > 0 ? Math.round((Number(counts[maxIndex])||0) / total * 100) : 0;
+                        kpiEl.textContent = (genres[maxIndex] && genres[maxIndex].name ? genres[maxIndex].name : '') + ' (' + pct + '%)';
+                    } else {
+                        var pct = Math.round((Number(counts[maxIndex])||0) / totalUsuarios * 100);
+                        kpiEl.textContent = (genres[maxIndex] && genres[maxIndex].name ? genres[maxIndex].name : '') + ' (' + pct + '%)';
+                    }
+                }
+            }
+            updateComposerKPI(items);
+        }).catch(function(){ });
+    };
+
+    // carregar inicialmente
+    window.loadGenreStats();
+
+    const myChart2 = new Chart(document.getElementById("myChart2"), config2);
 
 </script>
 
 <script>
-    const myChart1 = new Chart(
-        document.getElementById("myChart1"),
-        config
-    );
-
-    const myChart2 = new Chart(
-        document.getElementById("myChart2"),
-        config2
-    );
-
+    (function(){
+        function renderTotalUsuarios(count){
+            var el = document.getElementById('kpi-total-usuarios');
+            if(!el) return;
+            if(typeof count === 'number'){
+                el.textContent = count.toLocaleString('pt-BR');
+            } else {
+                el.textContent = count || ' - ';
+            }
+        }
+        function loadTotalUsuariosKPI(){
+            fetch('/usuarios/total').then(function(r){
+                if(!r.ok) throw new Error('total users');
+                return r.json();
+            }).then(function(json){
+                var total = (json && typeof json.totalUsuarios !== 'undefined') ? Number(json.totalUsuarios) : 0;
+                renderTotalUsuarios(Number.isFinite(total) ? total : 0);
+            }).catch(function(){ renderTotalUsuarios(' - '); });
+        }
+        loadTotalUsuariosKPI();
+    })();
 </script>
+
 <script>
-    // simple period filter behaviour: changes sample data for demo and recenters charts
     (function(){
         const sel = document.getElementById('period-select');
         if(!sel) return;
-
         sel.addEventListener('change', function(){
             const v = sel.value;
-            // lightweight demo: change engagement dataset depending on selection
-            if(v === '7'){
-                myChart2.data.datasets[0].data = [300, 700, 650, 800];
-            } else if (v === '90'){
-                myChart2.data.datasets[0].data = [200,400,450,700];
-            } else {
-                // default 30 days
-                myChart2.data.datasets[0].data = [500,650,600,900];
-            }
+            if(v === '7'){ myChart2.data.datasets[0].data = [300, 700, 650, 800]; }
+            else if (v === '90'){ myChart2.data.datasets[0].data = [200,400,450,700]; }
+            else { myChart2.data.datasets[0].data = [500,650,600,900]; }
             myChart2.update();
         });
     })();
 </script>
+
+<script>
+    (function(){
+        const KEY = 'timbre_kpi_media_v1';
+        let state = { totalAcertos: 0, totalTentativas: 0 };
+        function load(){ try{ const raw = localStorage.getItem(KEY); if(raw) state = JSON.parse(raw); }catch(e){} render(); }
+        function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+        function render(){ const el = document.getElementById('kpi-media-acertos'); if(!el) return; if(state.totalTentativas === 0) { el.textContent = ' - '; return; } const media = state.totalAcertos / state.totalTentativas; el.textContent = Math.round(media * 100) + '%'; }
+        load();
+        (function fetchServerSummary(){
+            fetch('/dash/quiz/1/summary').then(function(r){ if(!r.ok) throw new Error('no summary'); return r.json(); }).then(function(json){
+                    var total = Number(json.totalTentativas) || 0;
+                    if(typeof json.mediaAcertos !== 'undefined' && json.mediaAcertos !== null){
+                        var mediaPerc = Number(json.mediaAcertos) || 0;
+                        var el = document.getElementById('kpi-media-acertos');
+                        if(total > 0){ state.totalAcertos = Math.round((mediaPerc/100) * total); state.totalTentativas = total; save(); render(); }
+                        else { if(el) el.textContent = Math.round(mediaPerc) + '%'; }
+                    } else if(json && typeof json.mediaPontuacao !== 'undefined'){
+                        var mediaPerc = Number(json.mediaPontuacao) || 0; var total = Number(json.totalTentativas) || 0;
+                        if(total > 0){ state.totalAcertos = Math.round((mediaPerc/100) * total); state.totalTentativas = total; save(); render(); }
+                    }
+            }).catch(function(){});
+        })();
+        try{
+            const socket = io();
+            socket.on('connect', ()=> console.log('socket ok', socket.id));
+            socket.on('quiz:tentativa_concluida', function(payload){
+                if(payload){
+                    if(typeof payload.acertos === 'number'){ state.totalAcertos += payload.acertos; state.totalTentativas += 1; }
+                    else if(typeof payload.pontuacao === 'number' && typeof payload.total_perguntas === 'number' && payload.total_perguntas>0){ const est = Math.round((payload.pontuacao/100) * payload.total_perguntas); state.totalAcertos += est; state.totalTentativas += 1; }
+                    else { state.totalTentativas += 1; }
+                    save(); render();
+                }
+            });
+            // quando preferências forem atualizadas por qualquer usuário, recarregar estatísticas de estilos
+            socket.on('prefs:updated', function(){
+                try{ if(window.loadGenreStats) window.loadGenreStats(); }catch(e){}
+            });
+        }catch(e){ console.warn('socket not available', e); }
+    })();
+</script>
+
 </html>

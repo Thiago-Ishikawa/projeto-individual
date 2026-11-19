@@ -122,6 +122,8 @@ button:hover{
     flex: 1;
     width: 100%;
     display: flex;
+    justify-content: space-between;
+    align-items: center;
     flex-direction: row;
 }
 
@@ -485,3 +487,4 @@ a {
     align-items: center;
     padding: 32px;
 }
+

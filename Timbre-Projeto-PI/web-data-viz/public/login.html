@@ -86,8 +86,8 @@
 
         if(emailVar == "" || senhaVar == ""){
             div_msg.innerHTML = `Preencha os campos em branco!`;
-        }else{
-            setInterval(subirMensagem, 5000);
+            finalizarAguardar && finalizarAguardar(); // garantir que loading seja finalizado se existir
+            return false; // não prosseguir com fetch
         }
 
         console.log("FORM LOGIN: ", emailVar);
@@ -128,7 +128,8 @@
 
                 resposta.text().then(texto => {
                     console.error(texto);
-                    finalizarAguardar(texto);
+                    
+                    div_msg.innerText = texto || 'Email e/ou senha incorretos.';
                 });
             }
 

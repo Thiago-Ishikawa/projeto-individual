@@ -5,6 +5,9 @@ function autenticar(req, res) {
     var email = req.body.emailServer;
     var senha = req.body.senhaServer;
 
+    // debug mínimo para confirmar que a rota recebeu os dados
+    console.log('[DEBUG] /usuarios/autenticar recebido body:', { emailServer: email, senhaServer: senha ? '***' : senha });
+
     if (email == undefined) {
         res.status(400).send("Seu email está undefined!");
     } else if (senha == undefined) {
@@ -20,21 +23,54 @@ function autenticar(req, res) {
                     if (resultadoAutenticar.length == 1) {
                         console.log(resultadoAutenticar);
 
-                        aquarioModel.buscarAquariosPorEmpresa(resultadoAutenticar[0].empresaId)
-                            .then((resultadoAquarios) => {
-                                if (resultadoAquarios.length > 0) {
+                        // Se usuario tiver empresaId, buscar aquários; senão retornar sem aquários
+                        var empresaId = resultadoAutenticar[0].empresaId;
+                        if (empresaId !== undefined && empresaId !== null) {
+                            aquarioModel.buscarAquariosPorEmpresa(empresaId)
+                                .then((resultadoAquarios) => {
+                                    if (resultadoAquarios && resultadoAquarios.length > 0) {
+                                        res.json({
+                                            id: resultadoAutenticar[0].id,
+                                            email: resultadoAutenticar[0].email,
+                                            nome: resultadoAutenticar[0].nome,
+                                            senha: resultadoAutenticar[0].senha,
+                                            cpf: resultadoAutenticar[0].cpf,
+                                            aquarios: resultadoAquarios
+                                        });
+                                    } else {
+                                        // sucesso, sem aquarios
+                                        res.json({
+                                            id: resultadoAutenticar[0].id,
+                                            email: resultadoAutenticar[0].email,
+                                            nome: resultadoAutenticar[0].nome,
+                                            senha: resultadoAutenticar[0].senha,
+                                            cpf: resultadoAutenticar[0].cpf,
+                                            aquarios: []
+                                        });
+                                    }
+                                }).catch(function(erro){
+                                    console.log('Erro ao buscar aquarios: ', erro);
+                                    // responder apenas com usuário, sem aquarios em caso de falha na busca
                                     res.json({
                                         id: resultadoAutenticar[0].id,
                                         email: resultadoAutenticar[0].email,
                                         nome: resultadoAutenticar[0].nome,
                                         senha: resultadoAutenticar[0].senha,
                                         cpf: resultadoAutenticar[0].cpf,
-                                        aquarios: resultadoAquarios
+                                        aquarios: []
                                     });
-                                } else {
-                                    res.status(204).json({ aquarios: [] });
-                                }
-                            })
+                                });
+                        } else {
+                            // sem empresa vinculada: retornar usuário e lista vazia de aquarios
+                            res.json({
+                                id: resultadoAutenticar[0].id,
+                                email: resultadoAutenticar[0].email,
+                                nome: resultadoAutenticar[0].nome,
+                                senha: resultadoAutenticar[0].senha,
+                                cpf: resultadoAutenticar[0].cpf,
+                                aquarios: []
+                            });
+                        }
                     } else if (resultadoAutenticar.length == 0) {
                         res.status(403).send("Email e/ou senha inválido(s)");
                     } else {
@@ -104,7 +140,20 @@ function cadastrar(req, res) {
     }
 }
 
+function totalUsuarios(req, res) {
+    usuarioModel.contarTotalUsuarios()
+        .then(function(resultado){
+            var total = (resultado && resultado[0]) ? Number(resultado[0].totalUsuarios) : 0;
+            if(!Number.isFinite(total)) total = 0;
+            res.json({ totalUsuarios: total });
+        }).catch(function(erro){
+            console.log('Erro ao contar usuários:', erro);
+            res.status(500).json(erro.sqlMessage);
+        });
+}
+
 module.exports = {
     autenticar,
-    cadastrar
+    cadastrar,
+    totalUsuarios
 }

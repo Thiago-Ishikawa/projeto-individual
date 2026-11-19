@@ -20,15 +20,16 @@ function limparSessao() {
 // carregamento (loading)
 function aguardar() {
     var divAguardar = document.getElementById("div_aguardar");
+    if (!divAguardar) return; // elemento pode não existir em todas as páginas
     divAguardar.style.display = "flex";
 }
 
 function finalizarAguardar(texto) {
     var divAguardar = document.getElementById("div_aguardar");
-    divAguardar.style.display = "none";
+    if (divAguardar) divAguardar.style.display = "none";
 
     var divErrosLogin = document.getElementById("div_erros_login");
-    if (texto) {
+    if (texto && divErrosLogin) {
         divErrosLogin.style.display = "flex";
         divErrosLogin.innerHTML = texto;
     }

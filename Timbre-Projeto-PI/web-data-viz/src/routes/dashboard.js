@@ -22,4 +22,9 @@ router.get('/top/compositores', function (req, res) {
     dashboardController.topCompositores(req, res);
 });
 
+// Contagem de preferências por item (usado para gerar top compositores favoritos)
+router.get('/preferencias', function (req, res) {
+    dashboardController.preferencias(req, res);
+});
+
 module.exports = router;

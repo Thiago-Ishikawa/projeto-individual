@@ -34,10 +34,17 @@ function topCompositores(limit) {
     return database.executar(instrucao);
 }
 
+function mediaAcertosPorQuiz(fk_quiz) {
+    var instrucao = `SELECT AVG(acertos) as media_acertos, AVG(total_perguntas) as media_total FROM tentativa_quiz WHERE fk_quiz = ${fk_quiz} AND estado = 'CONCLUIDA'`;
+    console.log("Executando a instrução SQL: \n" + instrucao);
+    return database.executar(instrucao);
+}
+
 module.exports = {
     mediaPontuacaoPorQuiz,
     totalTentativasPorQuiz,
     tentativasPorDia,
     topMusicas,
-    topCompositores
+    topCompositores,
+    mediaAcertosPorQuiz
 };

@@ -8,6 +8,15 @@ database.executar("ALTER TABLE tentativa_quiz ADD COLUMN total_perguntas INT NOT
     // interromper a inicialização; log para diagnóstico leve.
     console.log("ALTER TABLE tentativa_quiz: ", err && err.code ? err.code : err);
 });
+// garantir fk_quiz existe (nullable para compatibilidade retroativa)
+database.executar("ALTER TABLE tentativa_quiz ADD COLUMN fk_quiz INT NULL").catch(function (err) {
+    // ignorar erro se coluna já existir
+    if (err && err.code && (err.code === 'ER_DUP_FIELDNAME' || err.code === 'ER_CANT_ADD_COLUMN')) {
+        console.log('fk_quiz já existe ou não pode ser adicionada:', err.code);
+    } else {
+        console.log('ALTER TABLE tentativa_quiz (fk_quiz):', err && err.code ? err.code : err);
+    }
+});
 
 function iniciarTentativa(fk_usuario, total_perguntas) {
     // total_perguntas deve ser informado pelo front-end ao iniciar a tentativa

@@ -98,7 +98,35 @@ function responder(req, res) {
 function concluir(req, res) {
     var id_tentativa = req.params.id;
     tentativaModel.calcularPontuacao(id_tentativa).then(function (resultado) {
-        res.json(resultado);
+        // depois de calcular e concluir, obter a tentativa para dados complementares
+        tentativaModel.obterTentativa(id_tentativa).then(function (trows) {
+            var tent = (trows && trows[0]) ? trows[0] : null;
+            // montar payload mínimo para dashboard
+            var payload = {
+                id_tentativa: tent ? tent.id_tentativa : id_tentativa,
+                fk_usuario: tent ? tent.fk_usuario : null,
+                acertos: resultado.corretas || (tent ? tent.acertos : null),
+                erros: resultado.erros || (tent ? tent.erros : null),
+                pontuacao: resultado.pontuacao || (tent ? tent.pontuacao : null),
+                total_perguntas: resultado.total || (tent ? tent.total_perguntas : null),
+                inicio: tent ? tent.inicio : null,
+                termino: tent ? tent.termino : null
+            };
+
+            // emitir via socket.io se disponível (app deve ter setado 'io')
+            try {
+                var io = req.app && req.app.get ? req.app.get('io') : null;
+                if (io) io.emit('quiz:tentativa_concluida', payload);
+            } catch (e) {
+                console.log('Erro ao emitir evento socket.io:', e && e.message ? e.message : e);
+            }
+
+            res.json(resultado);
+        }).catch(function (err) {
+            console.log('Erro ao obter tentativa após concluir:', err);
+            // mesmo que não consiga obter a tentativa, retornar resultado do cálculo
+            res.json(resultado);
+        });
     }).catch(function (erro) {
         console.log(erro);
         res.status(500).json(erro.sqlMessage);

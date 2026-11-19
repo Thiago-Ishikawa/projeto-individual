@@ -24,12 +24,13 @@ descricao VARCHAR(255)
 );
 
 CREATE TABLE usuario_preferencia (
-id_usuario_preferencia INT PRIMARY KEY AUTO_INCREMENT,
-fk_preferencia_usuario INT,
-CONSTRAINT fk_preferencia_usuario FOREIGN KEY (fk_preferencia_usuario) REFERENCES usuario(id_usuario),
-fk_preferencia INT,
-CONSTRAINT fk_preferencia FOREIGN KEY (fk_preferencia) REFERENCES preferencia(id_preferencia),
-data_registro DATE
+    id_usuario_preferencia INT PRIMARY KEY AUTO_INCREMENT,
+    fk_preferencia_usuario INT,
+    CONSTRAINT fk_preferencia_usuario FOREIGN KEY (fk_preferencia_usuario) REFERENCES usuario(id_usuario),
+    fk_preferencia INT,
+    CONSTRAINT fk_preferencia FOREIGN KEY (fk_preferencia) REFERENCES preferencia(id_preferencia),
+    data_registro DATE,
+    ativo TINYINT(1) NOT NULL DEFAULT 1
 );
 
 CREATE TABLE compositor (
@@ -44,7 +45,7 @@ id_musica INT PRIMARY KEY AUTO_INCREMENT,
 titulo VARCHAR(100) NOT NULL,
 descricao VARCHAR(255),
 duracao TIME,
-ano_composicao YEAR,
+ano_composicao SMALLINT,
 fk_compositor INT,
 CONSTRAINT fk_compositor FOREIGN KEY (fk_compositor) REFERENCES compositor(id_compositor)
 );
