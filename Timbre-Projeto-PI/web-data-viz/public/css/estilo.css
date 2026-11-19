@@ -350,6 +350,16 @@ a {
     box-shadow: 0 2px 0;
 }
 
+.containerLogin .info-criptografia {
+    color: #dfe4ea;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    line-height: 1.4;
+    min-height: 20px;
+    word-break: break-word;
+    display: none;
+}
+
 
 /*Simulador*/
 .containerSimulador{

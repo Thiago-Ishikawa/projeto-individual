@@ -60,9 +60,10 @@
             <span>Email</span>
             <input type="text" id="ipt_email" placeholder="Digite seu e-mail">
         </div>
-        <div>
+        <div class="campo">
             <span>Senha</span>
-            <input type="text" id="ipt_senha" placeholder="Digite sua senha">
+            <input type="password" id="ipt_senha" placeholder="Digite sua senha">
+            <p id="senha_cifrada" class="info-criptografia">Criptografia ativa: aguardando caracteres</p>
         </div>
 
         <button onclick="entrar()">Entrar</button>
@@ -77,6 +78,7 @@
 </body>
 
 <script>
+    const div_msg = document.getElementById("div_msg");
 
     function entrar(){
         aguardar();
@@ -116,9 +118,10 @@
                     sessionStorage.ID_USUARIO = json.id;
                     sessionStorage.AQUARIOS = JSON.stringify(json.aquarios)
 
+                    showAlert("Entrando na conta...");
                     setTimeout(function () {
                         window.location = "./dashboard.html";
-                    }, 1000); // apenas para exibir o loading
+                    }, 1200); // apenas para exibir o loading
 
                 });
 
@@ -142,6 +145,62 @@
 
     function sumirMensagem() {
         cardErro.style.display = "none"
+    }
+
+    function showAlert(message) {
+        if (!div_msg) return;
+        div_msg.innerText = message;
+        div_msg.style.backgroundColor = '#FFC857';
+        div_msg.style.color = '#000000';
+        div_msg.style.borderRadius = '10px';
+        div_msg.style.padding = '20px 24px';
+        div_msg.style.marginTop = '12px';
+        div_msg.style.display = 'block';
+        div_msg.style.textAlign = 'center';
+    }
+
+    const inputSenha = document.getElementById("ipt_senha");
+    const textoCriptografia = document.getElementById("senha_cifrada");
+    let hashRequestId = 0;
+
+    function bufferParaHex(buffer) {
+        return Array.from(new Uint8Array(buffer))
+            .map(b => b.toString(16).padStart(2, "0"))
+            .join("");
+    }
+
+    function atualizarCriptografia(valor) {
+        if (!textoCriptografia) return;
+
+        if (!valor) {
+            textoCriptografia.innerText = "Criptografia ativa: aguardando caracteres";
+            return;
+        }
+
+        if (!window.crypto || !crypto.subtle) {
+            textoCriptografia.innerText = "Criptografia não disponível neste navegador.";
+            return;
+        }
+
+        const requestId = ++hashRequestId;
+        try {
+            const encoder = new TextEncoder();
+            crypto.subtle.digest("SHA-256", encoder.encode(valor)).then(hashBuffer => {
+                if (requestId !== hashRequestId) return;
+                const hashHex = bufferParaHex(hashBuffer);
+                textoCriptografia.innerText = `Criptografia SHA-256: ${hashHex.slice(0, 24)}...`;
+            }).catch(() => {
+                if (requestId !== hashRequestId) return;
+                textoCriptografia.innerText = "Erro ao gerar a criptografia.";
+            });
+        } catch (erro) {
+            textoCriptografia.innerText = "Erro ao gerar a criptografia.";
+        }
+    }
+
+    if (inputSenha) {
+        inputSenha.addEventListener("input", () => atualizarCriptografia(inputSenha.value));
+        atualizarCriptografia(inputSenha.value);
     }
 
 </script>
