@@ -1,13 +1,21 @@
 var database = require("../database/config");
 
+function _quizConcluidasFilter(fk_quiz) {
+    // garantir que tentativas sem fk_quiz preenchido (legado/migração) continuam sendo contadas
+    var quizId = Number(fk_quiz);
+    if (!Number.isFinite(quizId)) quizId = 0;
+    return `COALESCE(fk_quiz, ${quizId}) = ${quizId} AND estado = 'CONCLUIDA'`;
+}
+
 function mediaPontuacaoPorQuiz(fk_quiz) {
-    var instrucao = `SELECT AVG(pontuacao) as media FROM tentativa_quiz WHERE fk_quiz = ${fk_quiz} AND estado = 'concluida'`;
+    var where = _quizConcluidasFilter(fk_quiz);
+    var instrucao = `SELECT AVG(pontuacao) as media FROM tentativa_quiz WHERE ${where}`;
     console.log("Executando a instrução SQL: \n" + instrucao);
     return database.executar(instrucao);
 }
 
 function totalTentativasPorQuiz(fk_quiz, dias) {
-    var where = `fk_quiz = ${fk_quiz}`;
+    var where = _quizConcluidasFilter(fk_quiz);
     if (dias) where += ` AND inicio >= DATE_SUB(NOW(), INTERVAL ${dias} DAY)`;
     var instrucao = `SELECT COUNT(*) as total FROM tentativa_quiz WHERE ${where}`;
     console.log("Executando a instrução SQL: \n" + instrucao);
@@ -35,7 +43,17 @@ function topCompositores(limit) {
 }
 
 function mediaAcertosPorQuiz(fk_quiz) {
-    var instrucao = `SELECT AVG(acertos) as media_acertos, AVG(total_perguntas) as media_total FROM tentativa_quiz WHERE fk_quiz = ${fk_quiz} AND estado = 'CONCLUIDA'`;
+    var where = _quizConcluidasFilter(fk_quiz);
+    var instrucao = `
+        SELECT
+            CASE WHEN IFNULL(SUM(total_perguntas), 0) = 0
+                 THEN 0
+                 ELSE (SUM(acertos) / SUM(total_perguntas)) * 100
+            END AS media_acertos,
+            SUM(total_perguntas) AS total_perguntas
+        FROM tentativa_quiz
+        WHERE ${where}
+    `;
     console.log("Executando a instrução SQL: \n" + instrucao);
     return database.executar(instrucao);
 }

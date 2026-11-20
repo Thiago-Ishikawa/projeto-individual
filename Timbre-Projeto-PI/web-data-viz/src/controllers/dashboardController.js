@@ -12,9 +12,7 @@ function quizSummary(req, res) {
         var total = results[1] && results[1][0] ? results[1][0].total : 0;
         var mediaAcertosRaw = results[2] && results[2][0] ? results[2][0] : null;
         var mediaAcertos = null;
-        if (mediaAcertosRaw && mediaAcertosRaw.media_total && mediaAcertosRaw.media_total > 0) {
-            mediaAcertos = (Number(mediaAcertosRaw.media_acertos) / Number(mediaAcertosRaw.media_total)) * 100;
-        } else if (mediaAcertosRaw && mediaAcertosRaw.media_acertos !== null) {
+        if (mediaAcertosRaw && typeof mediaAcertosRaw.media_acertos !== 'undefined' && mediaAcertosRaw.media_acertos !== null) {
             mediaAcertos = Number(mediaAcertosRaw.media_acertos);
         }
         res.json({ fk_quiz: fk_quiz, mediaPontuacao: media, totalTentativas: total, mediaAcertos: mediaAcertos });

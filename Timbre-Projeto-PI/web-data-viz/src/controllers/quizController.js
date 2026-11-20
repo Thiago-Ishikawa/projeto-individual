@@ -40,7 +40,7 @@ function iniciar(req, res) {
     var total_perguntas = req.body.total_perguntas || req.body.totalPerguntas || null;
     if (!total_perguntas) return res.status(400).send('total_perguntas é obrigatório');
 
-    tentativaModel.iniciarTentativa(fk_usuario, total_perguntas).then(function (resultado) {
+    tentativaModel.iniciarTentativa(fk_usuario, total_perguntas, fk_quiz).then(function (resultado) {
         res.json({ id_tentativa: resultado.insertId });
     }).catch(function (erro) {
         console.log(erro);

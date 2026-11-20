@@ -111,6 +111,14 @@ button {
     height: 40px;
     width: 180px;
 }
+#btnVoltarSimulador {
+    background: #FFC857;
+    color: #141414;
+    border-radius: 16px;
+    height: 40px;
+    width: 180px;
+    margin-right: 8px;
+}
 #botoes button {
     margin-right: 8px;
 }

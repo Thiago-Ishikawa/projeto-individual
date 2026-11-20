@@ -18,9 +18,10 @@ database.executar("ALTER TABLE tentativa_quiz ADD COLUMN fk_quiz INT NULL").catc
     }
 });
 
-function iniciarTentativa(fk_usuario, total_perguntas) {
-    // total_perguntas deve ser informado pelo front-end ao iniciar a tentativa
-    var instrucao = `INSERT INTO tentativa_quiz (fk_usuario, inicio, total_perguntas, estado, acertos, erros, pontuacao) VALUES (${fk_usuario}, NOW(), ${total_perguntas}, 'EM_ANDAMENTO', 0, 0, 0)`;
+function iniciarTentativa(fk_usuario, total_perguntas, fk_quiz) {
+    // total_perguntas e fk_quiz devem ser informados pelo front-end ao iniciar a tentativa
+    var fkQuizValue = (typeof fk_quiz === 'number' || !isNaN(Number(fk_quiz))) ? Number(fk_quiz) : null;
+    var instrucao = `INSERT INTO tentativa_quiz (fk_usuario, fk_quiz, inicio, total_perguntas, estado, acertos, erros, pontuacao) VALUES (${fk_usuario}, ${fkQuizValue === null ? 'NULL' : fkQuizValue}, NOW(), ${total_perguntas}, 'EM_ANDAMENTO', 0, 0, 0)`;
     console.log("Executando a instrução SQL: \n" + instrucao);
     return database.executar(instrucao);
 }

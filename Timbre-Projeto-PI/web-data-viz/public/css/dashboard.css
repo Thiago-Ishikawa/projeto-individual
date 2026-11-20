@@ -168,6 +168,11 @@ body {
 .kpi-value .kpi-sub{ font-size: 14px; color: #D3C6B8; display: block; margin-top: 4px; }
 .kpi-value .kpi-main{ font-size: 22px; display: block; }
 .kpi-value .kpi-sub{ font-size: 14px; color: #D3C6B8; display: block; margin-top: 4px; }
+.kpi-description {
+    font-family: 'Space Grotesk', sans-serif;
+    color: #D3C6B8;
+    font-size: 10px;
+}
 
 .kpi .icon{ color:#FFC857; font-size:18px }
 

@@ -62,7 +62,7 @@
                 <div class="kpi-inner">
                     <div class="kpi-title">Total de Usuários Cadastrados</div>
                     <div class="kpi-value" id="kpi-total-usuarios"></div>
-                    Usuários registrados na plataforma
+                    <div class="kpi-description">Usuários registrados na plataforma</div>
                 </div>
             </div>
             <div class="kpi"> 
@@ -140,23 +140,15 @@ const genres = [
             'musica moderna', 'moderna'
         ]
     },
-    {
-        name: 'Outros',
-        colors: '#9E9E9E',
-        synonyms: [
-            'outros', 'outro', 'others',
-            'varios', 'various', 'misc', 'diversos'
-        ]
-    }
 ];
-const composerQuestionNames = [
-    'Ludwig van Beethoven',
-    'Wolfgang Amadeus Mozart',
-    'Frédéric Chopin',
-    'Claude Debussy',
-    'Johann Sebastian Bach'
-].map(function(name){ return normalizeText(name); });
-const composerNameSet = new Set(composerQuestionNames);
+const composerKeywords = ['beethoven','mozart','chopin','debussy','bach'];
+    function isComposerItem(item){
+        if(!item) return false;
+        var nameNorm = normalizeText(item.nome || '');
+        if(composerKeywords.some(function(keyword){ return nameNorm.includes(keyword); })) return true;
+        var descNorm = normalizeText(item.descricao || '');
+        return descNorm.includes('compositor');
+    }
     Chart.defaults.font.family = 'Space Grotesk, "Source Sans 3", sans-serif';
     Chart.defaults.color ='#F0F8FF';
     Chart.defaults.plugins.legend.labels.color = '#F0F8FF';
@@ -167,12 +159,7 @@ const composerNameSet = new Set(composerQuestionNames);
     function updateComposerKPI(items){
         var kpiEl = document.getElementById('kpi-compositor-favorito');
         if(!kpiEl) return;
-        var composerItems = (Array.isArray(items) ? items : []).filter(function(item){
-            var nameNorm = normalizeText(item.nome || '');
-            if(composerNameSet.has(nameNorm)) return true;
-            var descNorm = normalizeText(item.descricao || '');
-            return descNorm.indexOf('compositor') !== -1;
-        });
+        var composerItems = (Array.isArray(items) ? items : []).filter(isComposerItem);
         if(composerItems.length === 0){
             kpiEl.innerHTML = '<span class="kpi-main">Sem dados de compositor favorito</span>';
             return;
@@ -232,6 +219,7 @@ const config2 = { type: 'line', data: data2, options: { responsive: true, mainta
             var sums = genres.map(function(){ return 0; });
             var matchedNames = genres.map(function(){ return []; });
             items.forEach(function(it){
+                if(isComposerItem(it)) return; // não incluir compositores no cálculo de estilos
 
     var n = normalizeText((it.nome || '') + ' ' + (it.descricao || ''));
     var nNoSpace = n.replace(/\s+/g,'');
@@ -384,22 +372,62 @@ const config2 = { type: 'line', data: data2, options: { responsive: true, mainta
     (function(){
         const KEY = 'timbre_kpi_media_v1';
         let state = { totalAcertos: 0, totalTentativas: 0 };
-        function load(){ try{ const raw = localStorage.getItem(KEY); if(raw) state = JSON.parse(raw); }catch(e){} render(); }
+        function load(){
+            try{ const raw = localStorage.getItem(KEY); if(raw) state = JSON.parse(raw); }catch(e){}
+            render();
+        }
         function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
-        function render(){ const el = document.getElementById('kpi-media-acertos'); if(!el) return; if(state.totalTentativas === 0) { el.textContent = ' - '; return; } const media = state.totalAcertos / state.totalTentativas; el.textContent = Math.round(media * 100) + '%'; }
+        function render(){
+            const el = document.getElementById('kpi-media-acertos');
+            if(!el) return;
+            if(state.totalTentativas === 0){
+                el.textContent = ' - ';
+                return;
+            }
+            const media = state.totalAcertos / state.totalTentativas;
+            el.textContent = Math.round(media * 100) + '%';
+        }
+
+        function applyServerSummary(json){
+            var total = Number(json.totalTentativas) || 0;
+            var mediaPerc = null;
+            if(typeof json.mediaAcertos !== 'undefined' && json.mediaAcertos !== null){
+                mediaPerc = Number(json.mediaAcertos);
+            } else if(json && typeof json.mediaPontuacao !== 'undefined' && json.mediaPontuacao !== null){
+                mediaPerc = Number(json.mediaPontuacao);
+            }
+
+            if(mediaPerc !== null && !Number.isFinite(mediaPerc)){
+                mediaPerc = null;
+            }
+
+            if(mediaPerc !== null){
+                if(total > 0){
+                    state.totalAcertos = Math.max(0, Math.round((mediaPerc/100) * total));
+                    state.totalTentativas = total;
+                } else {
+                    // zerar estado para não manter 100% antigo quando nenhuma tentativa concluída é retornada
+                    state.totalAcertos = 0;
+                    state.totalTentativas = 0;
+                }
+                save();
+                render();
+                if(total === 0){
+                    var el = document.getElementById('kpi-media-acertos');
+                    if(el) el.textContent = Math.round(mediaPerc) + '%';
+                }
+            } else if(total === 0){
+                state.totalAcertos = 0;
+                state.totalTentativas = 0;
+                save();
+                render();
+            }
+        }
+
         load();
         (function fetchServerSummary(){
             fetch('/dash/quiz/1/summary').then(function(r){ if(!r.ok) throw new Error('no summary'); return r.json(); }).then(function(json){
-                    var total = Number(json.totalTentativas) || 0;
-                    if(typeof json.mediaAcertos !== 'undefined' && json.mediaAcertos !== null){
-                        var mediaPerc = Number(json.mediaAcertos) || 0;
-                        var el = document.getElementById('kpi-media-acertos');
-                        if(total > 0){ state.totalAcertos = Math.round((mediaPerc/100) * total); state.totalTentativas = total; save(); render(); }
-                        else { if(el) el.textContent = Math.round(mediaPerc) + '%'; }
-                    } else if(json && typeof json.mediaPontuacao !== 'undefined'){
-                        var mediaPerc = Number(json.mediaPontuacao) || 0; var total = Number(json.totalTentativas) || 0;
-                        if(total > 0){ state.totalAcertos = Math.round((mediaPerc/100) * total); state.totalTentativas = total; save(); render(); }
-                    }
+                    applyServerSummary(json);
             }).catch(function(){});
         })();
         try{
